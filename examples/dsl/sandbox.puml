@@ -1,0 +1,78 @@
+@startuml(id=CustomerUpdateEvent)
+title Customer Information System - Dynamic
+caption This diagram shows what happens when a customer updates their details.
+
+skinparam {
+  shadowing false
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+}
+hide stereotype
+skinparam rectangle<<2>> {
+  BackgroundColor #ffbf00
+  FontColor #000000
+  BorderColor #B28500
+}
+skinparam rectangle<<3>> {
+  BackgroundColor #facc2e
+  FontColor #000000
+  BorderColor #AF8E20
+}
+skinparam rectangle<<4>> {
+  BackgroundColor #facc2e
+  FontColor #000000
+  BorderColor #AF8E20
+}
+skinparam database<<5>> {
+  BackgroundColor #f5da81
+  FontColor #000000
+  BorderColor #AB985A
+}
+skinparam rectangle<<6>> {
+  BackgroundColor #facc2e
+  FontColor #000000
+  BorderColor #AF8E20
+}
+skinparam database<<7>> {
+  BackgroundColor #f5da81
+  FontColor #000000
+  BorderColor #AB985A
+}
+skinparam rectangle<<8>> {
+  BackgroundColor #facc2e
+  FontColor #000000
+  BorderColor #AF8E20
+}
+skinparam database<<9>> {
+  BackgroundColor #f5da81
+  FontColor #000000
+  BorderColor #AB985A
+}
+skinparam rectangle<<10>> {
+  BackgroundColor #facc2e
+  FontColor #000000
+  BorderColor #AF8E20
+}
+left to right direction
+
+rectangle "==Customer\n<size:10>[Person]</size>\n\nA customer" <<2>> as 2
+rectangle "==Customer Application\n<size:10>[Container: Angular]</size>\n\nAllows customers to manage their profile." <<3>> as 3
+rectangle "==Customer Service\n<size:10>[Container: Java and Spring Boot]</size>\n\nThe point of access for customer information." <<4>> as 4
+database "==Customer Database\n<size:10>[Container: Oracle 12c]</size>\n\nStores customer information." <<5>> as 5
+rectangle "==Message Bus\n<size:10>[Container: RabbitMQ]</size>\n\nTransport for business events." <<10>> as 10
+rectangle "==Audit Service\n<size:10>[Container: C# .NET]</size>\n\nProvides organisation-wide auditing facilities." <<8>> as 8
+rectangle "==Reporting Service\n<size:10>[Container: Ruby]</size>\n\nCreates normalised data for reporting purposes." <<6>> as 6
+database "==Audit Store\n<size:10>[Container: Event Store]</size>\n\nStores information about events that have happened." <<9>> as 9
+database "==Reporting Database\n<size:10>[Container: MySQL]</size>\n\nStores a normalised version of all business data for ad hoc reporting purposes." <<7>> as 7
+2 .[#707070].> 3 : "1. Uses"
+3 -[#707070]-> 4 : "2. Updates customer information using\n<size:8>[JSON/HTTPS]</size>"
+4 -[#707070]-> 5 : "3. Stores data in\n<size:8>[JDBC]</size>"
+4 .[#707070].> 10 : "4. Sends customer update events to"
+4 .[#707070].> 3 : "5. Confirms update to\n<size:8>[WebSocket]</size>"
+10 .[#707070].> 8 : "5. Sends customer update events to"
+10 .[#707070].> 6 : "5. Sends customer update events to"
+8 -[#707070]-> 9 : "6. Stores events in"
+6 -[#707070]-> 7 : "6. Stores data in"
+@enduml
