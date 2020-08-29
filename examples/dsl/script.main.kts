@@ -1,12 +1,11 @@
 @file:Repository("http://jcenter.bintray.com")
 @file:DependsOn("com.structurizr:structurizr-core:1.5.0")
 @file:DependsOn("com.structurizr:structurizr-plantuml:1.5.0")
-@file:DependsOn("co.uzzu.structurizr.ktx:dsl:0.0.1")
+@file:DependsOn("co.uzzu.structurizr.ktx:dsl:0.0.2")
 
 import co.uzzu.structurizr.ktx.dsl.*
 import co.uzzu.structurizr.ktx.dsl.model.*
 import co.uzzu.structurizr.ktx.dsl.view.*
-import com.structurizr.Workspace
 import com.structurizr.io.plantuml.StructurizrPlantUMLWriter
 import com.structurizr.model.*
 import com.structurizr.view.*
@@ -20,9 +19,8 @@ val DATASTORE_TAG = "Database"
 val workspace = Workspace(
     "Microservices example",
     "An example of a microservices architecture, which includes asynchronous and parallel behaviour."
-)
+) {
 
-workspace.apply {
     lateinit var customer: Person
     lateinit var softwareSystem: SoftwareSystem
     lateinit var customerApplication: Container
@@ -36,62 +34,49 @@ workspace.apply {
 
     model {
         customer = Person("Customer", "A customer")
-        softwareSystem = SoftwareSystem("Customer Information System", "Stores information ") {
-            customerApplication = Container(
-                "Customer Application",
-                "Allows customers to manage their profile.",
-                "Java and Spring Boot"
-            )
-            customerService = Container(
-                "Customer Service",
-                "The point of access for customer information.",
-                "Java and Spring Boot"
-            ) {
+        softwareSystem = SoftwareSystem("Customer Information System") {
+            description = "Stores information"
+
+            customerApplication = Container("Customer Application") {
+                description = "Allows customers to manage their profile."
+                technology = "Java and Spring Boot"
+            }
+            customerService = Container("Customer Service") {
+                description = "The point of access for customer information."
+                technology = "Java and Spring Boot"
                 tags(MICROSERVICE_TAG)
             }
-            customerDatabase = Container(
-                "Customer Database",
-                "Stores customer information.",
-                "Oracle 12c"
-            ) {
+            customerDatabase = Container("Customer Database") {
+                description = "Stores customer information."
+                technology = "Oracle 12c"
                 tags(DATASTORE_TAG)
             }
 
-            reportingService = Container(
-                "Reporting Service",
-                "Creates normalised data for reporting purposes.",
-                "Ruby"
-            ) {
+            reportingService = Container("Reporting Service") {
+                description = "Creates normalised data for reporting purposes."
+                technology = "Ruby"
                 tags(MICROSERVICE_TAG)
             }
-            reportingDatabase = Container(
-                "reporting database",
-                "Stores a normalised version of all business data for ad hoc reporting purposes.",
-                "MySQL"
-            ) {
+            reportingDatabase = Container("reporting database") {
+                description = "Stores a normalised version of all business data for ad hoc reporting purposes."
+                technology = "MySQL"
                 tags(DATASTORE_TAG)
             }
 
-            auditService = Container(
-                "Audit Service",
-                "Provides organisation-wide auditing facilities.",
-                "C# .NET"
-            ) {
+            auditService = Container("Audit Service") {
+                description = "Provides organisation-wide auditing facilities."
+                technology = "C# .NET"
                 tags(MICROSERVICE_TAG)
             }
-            auditStore = Container(
-                "Audit Store",
-                "Stores information about events that have happened.",
-                "Event Store"
-            ) {
+            auditStore = Container("Audit Store") {
+                description = "Stores information about events that have happened."
+                technology = "Event Store"
                 tags(DATASTORE_TAG)
             }
 
-            messageBus = Container(
-                "Message Bus",
-                "Transport for business events.",
-                "RabbitMQ"
-            ) {
+            messageBus = Container("Message Bus") {
+                description = "Transport for business events."
+                technology = "RabbitMQ"
                 tags(MESSAGE_BUS_TAG)
             }
 
@@ -138,7 +123,7 @@ workspace.apply {
             }
 
             parallelSequence {
-                add(customerService, "Confirms update to", customerApplication)
+                Relationship(customerService, "Confirms update to", customerApplication)
             }
         }
 
