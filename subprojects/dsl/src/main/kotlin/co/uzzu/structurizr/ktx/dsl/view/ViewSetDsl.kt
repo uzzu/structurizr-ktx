@@ -18,6 +18,9 @@ import com.structurizr.view.SystemContextView
 import com.structurizr.view.SystemLandscapeView
 import com.structurizr.view.ViewSet
 
+/**
+ * @see [ViewSet.createSystemLandscapeView]
+ */
 fun ViewSet.SystemLandscapeView(
     key: String,
     description: String? = null,
@@ -25,6 +28,9 @@ fun ViewSet.SystemLandscapeView(
 ): SystemLandscapeView =
     createSystemLandscapeView(key, description).applyIfNotNull(block)
 
+/**
+ * @see [ViewSet.createSystemContextView]
+ */
 fun ViewSet.SystemContextView(
     softwareSystem: SoftwareSystem,
     key: String,
@@ -33,6 +39,9 @@ fun ViewSet.SystemContextView(
 ): SystemContextView =
     createSystemContextView(softwareSystem, key, description).applyIfNotNull(block)
 
+/**
+ * @see [ViewSet.createContainerView]
+ */
 fun ViewSet.ContainerView(
     softwareSystem: SoftwareSystem,
     key: String,
@@ -41,6 +50,9 @@ fun ViewSet.ContainerView(
 ): ContainerView =
     createContainerView(softwareSystem, key, description).applyIfNotNull(block)
 
+/**
+ * @see [ViewSet.createComponentView]
+ */
 fun ViewSet.ComponentView(
     container: Container,
     key: String,
@@ -49,6 +61,9 @@ fun ViewSet.ComponentView(
 ): ComponentView =
     createComponentView(container, key, description).applyIfNotNull(block)
 
+/**
+ * @see [ViewSet.createDynamicView]
+ */
 fun ViewSet.DynamicView(
     key: String,
     description: String? = null,
@@ -56,6 +71,9 @@ fun ViewSet.DynamicView(
 ): DynamicView =
     createDynamicView(key, description).applyIfNotNull(block)
 
+/**
+ * @see [ViewSet.createDynamicView]
+ */
 fun ViewSet.DynamicView(
     softwareSystem: SoftwareSystem,
     key: String,
@@ -64,6 +82,9 @@ fun ViewSet.DynamicView(
 ): DynamicView =
     createDynamicView(softwareSystem, key, description).applyIfNotNull(block)
 
+/**
+ * @see [ViewSet.createDynamicView]
+ */
 fun ViewSet.DynamicView(
     container: Container,
     key: String,
@@ -72,6 +93,9 @@ fun ViewSet.DynamicView(
 ): DynamicView =
     createDynamicView(container, key, description).applyIfNotNull(block)
 
+/**
+ * @see [ViewSet.createDeploymentView]
+ */
 fun ViewSet.DeploymentView(
     key: String,
     description: String? = null,
@@ -79,6 +103,9 @@ fun ViewSet.DeploymentView(
 ): DeploymentView =
     createDeploymentView(key, description).applyIfNotNull(block)
 
+/**
+ * @see [ViewSet.createDeploymentView]
+ */
 fun ViewSet.DeploymentView(
     softwareSystem: SoftwareSystem,
     key: String,
@@ -87,6 +114,9 @@ fun ViewSet.DeploymentView(
 ): DeploymentView =
     createDeploymentView(softwareSystem, key, description).applyIfNotNull(block)
 
+/**
+ * @see [ViewSet.createFilteredView]
+ */
 fun ViewSet.FilteredView(
     staticView: StaticView,
     key: String,
@@ -97,5 +127,9 @@ fun ViewSet.FilteredView(
 ): FilteredView =
     createFilteredView(staticView, key, description, mode, *tags).applyIfNotNull(block)
 
-fun ViewSet.styles(block: ApplyBlock<Styles>) =
+/**
+ * @see [ViewSet.configuration]
+ * @see [com.structurizr.view.Configuration.styles]
+ */
+fun ViewSet.styles(block: ApplyBlock<Styles>): Styles =
     configuration.styles.apply(block)

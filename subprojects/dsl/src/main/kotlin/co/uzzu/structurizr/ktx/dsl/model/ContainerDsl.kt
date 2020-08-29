@@ -13,18 +13,8 @@ import kotlin.reflect.KClass
  */
 fun Container.Component(
     name: String,
-    description: String?,
-    block: ApplyBlock<Component>? = null
-): Component =
-    addComponent(name, description).applyIfNotNull(block)
-
-/**
- * @see [Container.addComponent]
- */
-fun Container.Component(
-    name: String,
-    description: String?,
-    technology: String?,
+    description: String? = null,
+    technology: String? = null,
     block: ApplyBlock<Component>? = null
 ): Component =
     addComponent(name, description, technology).applyIfNotNull(block)
@@ -35,20 +25,8 @@ fun Container.Component(
 fun <T : Any> Container.Component(
     name: String,
     klass: KClass<T>,
-    description: String?,
-    technology: String?,
+    description: String? = null,
+    technology: String? = null,
     block: ApplyBlock<Component>? = null
 ): Component =
     addComponent(name, klass.java, description, technology).applyIfNotNull(block)
-
-/**
- * @see [Container.addComponent]
- */
-fun Container.Component(
-    name: String,
-    type: String,
-    description: String?,
-    technology: String?,
-    block: ApplyBlock<Component>?
-): Component =
-    addComponent(name, type, description, technology).applyIfNotNull(block)

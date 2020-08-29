@@ -12,115 +12,46 @@ import com.structurizr.model.StaticStructureElement
 
 fun StaticStructureElement.uses(
     destination: SoftwareSystem,
-    description: String?,
-    block: ApplyBlock<Relationship>? = null
-): Relationship? =
-    uses(destination, description)?.applyIfNotNull(block)
-
-fun StaticStructureElement.uses(
-    destination: SoftwareSystem,
-    description: String?,
-    technology: String?,
-    block: ApplyBlock<Relationship>? = null
-): Relationship? =
-    uses(destination, description, technology)?.applyIfNotNull(block)
-
-fun StaticStructureElement.uses(
-    destination: SoftwareSystem,
-    description: String?,
-    technology: String?,
-    interactionStyle: InteractionStyle?,
+    description: String? = null,
+    technology: String? = null,
+    interactionStyle: InteractionStyle? = null,
     block: ApplyBlock<Relationship>? = null
 ): Relationship? =
     uses(destination, description, technology, interactionStyle)?.applyIfNotNull(block)
 
 fun StaticStructureElement.uses(
     destination: Container,
-    description: String?,
-    block: ApplyBlock<Relationship>? = null
-): Relationship? =
-    uses(destination, description)?.applyIfNotNull(block)
-
-fun StaticStructureElement.uses(
-    destination: Container,
-    description: String?,
-    technology: String?,
-    block: ApplyBlock<Relationship>? = null
-): Relationship? =
-    uses(destination, description, technology)?.applyIfNotNull(block)
-
-fun StaticStructureElement.uses(
-    destination: Container,
-    description: String?,
-    technology: String?,
-    interactionStyle: InteractionStyle?,
+    description: String? = null,
+    technology: String? = null,
+    interactionStyle: InteractionStyle? = null,
     block: ApplyBlock<Relationship>? = null
 ): Relationship? =
     uses(destination, description, technology, interactionStyle)?.applyIfNotNull(block)
 
 fun StaticStructureElement.uses(
     destination: Component,
-    description: String?,
-    block: ApplyBlock<Relationship>? = null
-): Relationship? =
-    uses(destination, description)?.applyIfNotNull(block)
-
-fun StaticStructureElement.uses(
-    destination: Component,
-    description: String?,
-    technology: String?,
-    block: ApplyBlock<Relationship>? = null
-): Relationship? =
-    uses(destination, description, technology)?.applyIfNotNull(block)
-
-fun StaticStructureElement.uses(
-    destination: Component,
-    description: String?,
-    technology: String?,
-    interactionStyle: InteractionStyle?,
+    description: String? = null,
+    technology: String? = null,
+    interactionStyle: InteractionStyle? = null,
     block: ApplyBlock<Relationship>? = null
 ): Relationship? =
     uses(destination, description, technology, interactionStyle)?.applyIfNotNull(block)
 
 fun StaticStructureElement.delivers(
     destination: Person,
-    description: String?,
-    block: ApplyBlock<Relationship>? = null
-): Relationship? =
-    delivers(destination, description)?.applyIfNotNull(block)
-
-fun StaticStructureElement.delivers(
-    destination: Person,
-    description: String?,
-    technology: String?,
-    block: ApplyBlock<Relationship>? = null
-): Relationship? =
-    delivers(destination, description, technology)?.applyIfNotNull(block)
-
-fun StaticStructureElement.delivers(
-    destination: Person,
-    description: String?,
-    technology: String?,
-    interactionStyle: InteractionStyle?,
+    description: String? = null,
+    technology: String? = null,
+    interactionStyle: InteractionStyle? = null,
     block: ApplyBlock<Relationship>? = null
 ): Relationship? =
     delivers(destination, description, technology, interactionStyle)?.applyIfNotNull(block)
 
 fun StaticStructureElement.uses(
     destination: StaticStructureElement,
-    description: String?,
-    technology: String?,
-    interactionStyle: InteractionStyle?,
-    block: ApplyBlock<Relationship>? = null
-): Relationship? =
-    uses(destination, description, technology, interactionStyle)?.applyIfNotNull(block)
-
-fun StaticStructureElement.uses(
-    destination: StaticStructureElement,
-    description: String?,
-    technology: String?,
-    interactionStyle: InteractionStyle?,
-    tags: Array<String?>?,
+    description: String? = null,
+    technology: String? = null,
+    interactionStyle: InteractionStyle? = null,
+    tags: Array<String?>? = null,
     block: ApplyBlock<Relationship>? = null
 ): Relationship? =
     uses(destination, description, technology, interactionStyle, tags)?.applyIfNotNull(block)

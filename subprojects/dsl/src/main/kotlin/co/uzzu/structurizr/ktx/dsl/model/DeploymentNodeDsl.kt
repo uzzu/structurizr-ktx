@@ -11,84 +11,47 @@ import com.structurizr.model.InfrastructureNode
 import com.structurizr.model.SoftwareSystem
 import com.structurizr.model.SoftwareSystemInstance
 
+/**
+ * @see [DeploymentNode.add]
+ */
 fun DeploymentNode.ContainerInstance(
     container: Container,
-    block: ApplyBlock<ContainerInstance>? = null
-): ContainerInstance =
-    add(container).applyIfNotNull(block)
-
-fun DeploymentNode.ContainerInstance(
-    container: Container,
-    replicateRelationships: Boolean,
+    replicateRelationships: Boolean = true,
     block: ApplyBlock<ContainerInstance>? = null
 ): ContainerInstance =
     add(container, replicateRelationships).applyIfNotNull(block)
 
+/**
+ * @see [DeploymentNode.add]
+ */
 fun DeploymentNode.SoftwareSystemInstance(
     softwareSystem: SoftwareSystem,
-    block: ApplyBlock<SoftwareSystemInstance>? = null
-): SoftwareSystemInstance =
-    add(softwareSystem).applyIfNotNull(block)
-
-fun DeploymentNode.SoftwareSystemInstance(
-    softwareSystem: SoftwareSystem,
-    replicateRelationships: Boolean,
+    replicateRelationships: Boolean = true,
     block: ApplyBlock<SoftwareSystemInstance>? = null
 ): SoftwareSystemInstance =
     add(softwareSystem, replicateRelationships).applyIfNotNull(block)
 
+/**
+ * @see [DeploymentNode.add]
+ */
 fun DeploymentNode.DeploymentNode(
     name: String,
-    block: ApplyBlock<DeploymentNode>? = null
-): DeploymentNode =
-    addDeploymentNode(name).applyIfNotNull(block)
-
-fun DeploymentNode.DeploymentNode(
-    name: String,
-    description: String?,
-    technology: String?,
-    block: ApplyBlock<DeploymentNode>? = null
-): DeploymentNode =
-    addDeploymentNode(name, description, technology).applyIfNotNull(block)
-
-fun DeploymentNode.DeploymentNode(
-    name: String,
-    description: String?,
-    technology: String?,
-    instances: Int,
-    block: ApplyBlock<DeploymentNode>? = null
-): DeploymentNode =
-    addDeploymentNode(name, description, technology, instances).applyIfNotNull(block)
-
-fun DeploymentNode.DeploymentNode(
-    name: String,
-    description: String?,
-    technology: String?,
-    instances: Int,
-    properties: Map<String, String>,
+    description: String? = null,
+    technology: String? = null,
+    instances: Int = 1,
+    properties: Map<String, String>? = null,
     block: ApplyBlock<DeploymentNode>? = null
 ): DeploymentNode =
     addDeploymentNode(name, description, technology, instances, properties).applyIfNotNull(block)
 
+/**
+ * @see [DeploymentNode.add]
+ */
 fun DeploymentNode.InfrastructureNode(
     name: String,
-    block: ApplyBlock<InfrastructureNode>? = null
-): InfrastructureNode =
-    addInfrastructureNode(name).applyIfNotNull(block)
-
-fun DeploymentNode.InfrastructureNode(
-    name: String,
-    description: String?,
-    technology: String?,
-    block: ApplyBlock<InfrastructureNode>? = null
-): InfrastructureNode =
-    addInfrastructureNode(name, description, technology).applyIfNotNull(block)
-
-fun DeploymentNode.InfrastructureNode(
-    name: String,
-    description: String?,
-    technology: String?,
-    properties: Map<String, String>,
+    description: String? = null,
+    technology: String? = null,
+    properties: Map<String, String>? = null,
     block: ApplyBlock<InfrastructureNode>? = null
 ): InfrastructureNode =
     addInfrastructureNode(name, description, technology, properties).applyIfNotNull(block)

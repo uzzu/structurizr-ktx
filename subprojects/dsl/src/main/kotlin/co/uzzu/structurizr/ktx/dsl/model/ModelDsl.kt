@@ -15,16 +15,7 @@ import com.structurizr.model.SoftwareSystem
  */
 fun Model.SoftwareSystem(
     name: String,
-    block: ApplyBlock<SoftwareSystem>? = null
-): SoftwareSystem =
-    addSoftwareSystem(name).applyIfNotNull(block)
-
-/**
- * @see [Model.addSoftwareSystem]
- */
-fun Model.SoftwareSystem(
-    name: String,
-    description: String?,
+    description: String? = null,
     block: ApplyBlock<SoftwareSystem>? = null
 ): SoftwareSystem =
     addSoftwareSystem(name, description).applyIfNotNull(block)
@@ -35,7 +26,7 @@ fun Model.SoftwareSystem(
 fun Model.SoftwareSystem(
     location: Location,
     name: String,
-    description: String?,
+    description: String? = null,
     block: ApplyBlock<SoftwareSystem>? = null
 ): SoftwareSystem =
     addSoftwareSystem(location, name, description).applyIfNotNull(block)
@@ -45,16 +36,7 @@ fun Model.SoftwareSystem(
  */
 fun Model.Person(
     name: String,
-    block: ApplyBlock<Person>? = null
-): Person =
-    addPerson(name).applyIfNotNull(block)
-
-/**
- * @see [Model.addPerson]
- */
-fun Model.Person(
-    name: String,
-    description: String?,
+    description: String? = null,
     block: ApplyBlock<Person>? = null
 ): Person =
     addPerson(name, description).applyIfNotNull(block)
@@ -75,67 +57,10 @@ fun Model.Person(
  */
 fun Model.DeploymentNode(
     name: String,
-    block: ApplyBlock<DeploymentNode>? = null
-): DeploymentNode =
-    addDeploymentNode(name).applyIfNotNull(block)
-
-/**
- * @see [Model.addDeploymentNode]
- */
-fun Model.DeploymentNode(
-    name: String,
-    description: String?,
-    technology: String,
-    block: ApplyBlock<DeploymentNode>? = null
-): DeploymentNode =
-    addDeploymentNode(name, description, technology).applyIfNotNull(block)
-
-/**
- * @see [Model.addDeploymentNode]
- */
-fun Model.DeploymentNode(
-    environment: String?,
-    name: String,
-    description: String?,
-    technology: String?,
-    block: ApplyBlock<DeploymentNode>? = null
-): DeploymentNode =
-    addDeploymentNode(environment, name, description, technology).applyIfNotNull(block)
-
-/**
- * @see [Model.addDeploymentNode]
- */
-fun Model.DeploymentNode(
-    name: String,
-    description: String?,
-    technology: String?,
-    instances: Int,
-    block: ApplyBlock<DeploymentNode>? = null
-): DeploymentNode =
-    addDeploymentNode(name, description, technology, instances).applyIfNotNull(block)
-
-/**
- * @see [Model.addDeploymentNode]
- */
-fun Model.DeploymentNode(
-    environment: String?,
-    name: String,
-    description: String?,
-    technology: String?,
-    instances: Int,
-    block: ApplyBlock<DeploymentNode>? = null
-): DeploymentNode =
-    addDeploymentNode(environment, name, description, technology, instances).applyIfNotNull(block)
-
-/**
- * @see [Model.addDeploymentNode]
- */
-fun Model.DeploymentNode(
-    name: String,
-    description: String?,
-    technology: String?,
-    instances: Int,
-    properties: Map<String, String>,
+    description: String? = null,
+    technology: String? = null,
+    instances: Int = 1,
+    properties: Map<String, String>? = null,
     block: ApplyBlock<DeploymentNode>? = null
 ): DeploymentNode =
     addDeploymentNode(name, description, technology, instances, properties).applyIfNotNull(block)
@@ -146,10 +71,10 @@ fun Model.DeploymentNode(
 fun Model.DeploymentNode(
     environment: String?,
     name: String,
-    description: String?,
-    technology: String?,
-    instances: Int,
-    properties: Map<String, String>,
+    description: String? = null,
+    technology: String? = null,
+    instances: Int = 1,
+    properties: Map<String, String>? = null,
     block: ApplyBlock<DeploymentNode>? = null
 ): DeploymentNode =
     addDeploymentNode(environment, name, description, technology, instances, properties).applyIfNotNull(block)

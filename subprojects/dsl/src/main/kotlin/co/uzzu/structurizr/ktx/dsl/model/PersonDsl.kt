@@ -6,26 +6,14 @@ import com.structurizr.model.InteractionStyle
 import com.structurizr.model.Person
 import com.structurizr.model.Relationship
 
+/**
+ * @see [Person.interactsWith]
+ */
 fun Person.interactsWith(
     destination: Person,
-    description: String,
-    block: ApplyBlock<Relationship>? = null
-): Relationship =
-    interactsWith(destination, description).applyIfNotNull(block)
-
-fun Person.interactsWith(
-    destination: Person,
-    description: String?,
-    technology: String?,
-    block: ApplyBlock<Relationship>? = null
-): Relationship =
-    interactsWith(destination, description, technology).applyIfNotNull(block)
-
-fun Person.interactsWith(
-    destination: Person,
-    description: String?,
-    technology: String?,
-    interactionStyle: InteractionStyle,
+    description: String? = null,
+    technology: String? = null,
+    interactionStyle: InteractionStyle = InteractionStyle.Synchronous,
     block: ApplyBlock<Relationship>? = null
 ): Relationship =
     interactsWith(destination, description, technology, interactionStyle).applyIfNotNull(block)

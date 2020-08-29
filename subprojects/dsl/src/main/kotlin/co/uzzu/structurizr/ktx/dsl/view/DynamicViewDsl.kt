@@ -8,14 +8,32 @@ import com.structurizr.model.Element
 import com.structurizr.view.DynamicView
 import com.structurizr.view.RelationshipView
 
+/**
+ * @see [DeploymentView.add]
+ */
 fun DynamicView.Relationship(
     source: Element,
     destination: Element,
-    description: String? = null,
     block: ApplyBlock<RelationshipView>? = null
+): RelationshipView =
+    add(source, "", destination).applyIfNotNull(block)
+
+/**
+ * @see [DeploymentView.add]
+ */
+fun DynamicView.Relationship(
+    source: Element,
+    description: String,
+    destination: Element,
+    block: ApplyBlock<RelationshipView>? = null
+
 ): RelationshipView =
     add(source, description, destination).applyIfNotNull(block)
 
+/**
+ * Call startParallelSequence, and endParallelSequence before and after apply block.
+ * @param block [ParallelSequenceScope]
+ */
 fun DynamicView.parallelSequence(
     block: ApplyBlock<ParallelSequenceScope>
 ) {
@@ -30,14 +48,30 @@ fun DynamicView.parallelSequence(
 class ParallelSequenceScope(
     private val view: DynamicView
 ) {
+    /**
+     * @see [DynamicView.add]
+     */
     fun Relationship(
         source: Element,
         destination: Element,
-        description: String? = null,
         block: ApplyBlock<RelationshipView>? = null
     ): RelationshipView =
-        view.Relationship(source, destination, description, block)
+        view.Relationship(source, "", destination).applyIfNotNull(block)
 
+    /**
+     * @see [DynamicView.add]
+     */
+    fun Relationship(
+        source: Element,
+        description: String,
+        destination: Element,
+        block: ApplyBlock<RelationshipView>? = null
+    ): RelationshipView =
+        view.Relationship(source, description, destination).applyIfNotNull(block)
+
+    /**
+     * @see [DynamicView.parallelSequence]
+     */
     fun parallelSequence(
         block: ApplyBlock<ParallelSequenceScope>
     ) {
