@@ -14,7 +14,7 @@ import com.structurizr.view.StaticView
 /**
  * @see [StaticView.addAnimation]
  */
-fun ViewScope<StaticView>.animations(
+fun <TView : StaticView> ViewScope<TView>.animations(
     block: ApplyBlock<StaticViewAnimationScope>
 ) {
     StaticViewAnimationScope(view).apply(block)
