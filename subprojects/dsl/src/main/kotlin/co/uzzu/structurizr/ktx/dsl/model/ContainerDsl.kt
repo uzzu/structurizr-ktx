@@ -3,30 +3,40 @@
 package co.uzzu.structurizr.ktx.dsl.model
 
 import co.uzzu.structurizr.ktx.dsl.ApplyBlock
-import co.uzzu.structurizr.ktx.dsl.applyIfNotNull
 import com.structurizr.model.Component
 import com.structurizr.model.Container
 import kotlin.reflect.KClass
 
 /**
- * @see [Container.addComponent]
+ * @see [Container.technology]
  */
-fun Container.Component(
-    name: String,
-    description: String? = null,
-    technology: String? = null,
-    block: ApplyBlock<Component>? = null
-): Component =
-    addComponent(name, description, technology).applyIfNotNull(block)
+var ElementScope<Container>.technology: String?
+    get() = element.technology
+    set(value) {
+        element.technology = value
+    }
 
 /**
  * @see [Container.addComponent]
  */
-fun <T : Any> Container.Component(
+fun ElementScope<Container>.Component(
+    name: String,
+    description: String? = null,
+    technology: String? = null,
+    block: ApplyBlock<ElementScope<Component>>? = null
+): Component =
+    element.addComponent(name, description, technology)
+        .apply { block?.let { ElementScope(this).apply(it) } }
+
+/**
+ * @see [Container.addComponent]
+ */
+fun <T : Any> ElementScope<Container>.Component(
     name: String,
     klass: KClass<T>,
     description: String? = null,
     technology: String? = null,
-    block: ApplyBlock<Component>? = null
+    block: ApplyBlock<ElementScope<Component>>? = null
 ): Component =
-    addComponent(name, klass.java, description, technology).applyIfNotNull(block)
+    element.addComponent(name, klass.java, description, technology)
+        .apply { block?.let { ElementScope(this).apply(block) } }

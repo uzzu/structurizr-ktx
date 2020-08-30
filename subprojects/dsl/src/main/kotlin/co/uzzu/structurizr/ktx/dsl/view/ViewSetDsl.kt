@@ -18,118 +18,139 @@ import com.structurizr.view.SystemContextView
 import com.structurizr.view.SystemLandscapeView
 import com.structurizr.view.ViewSet
 
-/**
- * @see [ViewSet.createSystemLandscapeView]
- */
-fun ViewSet.SystemLandscapeView(
-    key: String,
-    description: String? = null,
-    block: ApplyBlock<SystemLandscapeView>? = null
-): SystemLandscapeView =
-    createSystemLandscapeView(key, description).applyIfNotNull(block)
+class ViewSetScope(
+    private val views: ViewSet
+) {
+    /**
+     * @see [ViewSet.createSystemLandscapeView]
+     */
+    fun SystemLandscapeView(
+        key: String,
+        description: String? = null,
+        block: ApplyBlock<ViewScope<SystemLandscapeView>>? = null
+    ): SystemLandscapeView =
+        views.createSystemLandscapeView(key, description)
+            .apply { block?.let { ViewScope(this).apply(it) } }
 
-/**
- * @see [ViewSet.createSystemContextView]
- */
-fun ViewSet.SystemContextView(
-    softwareSystem: SoftwareSystem,
-    key: String,
-    description: String? = null,
-    block: ApplyBlock<SystemContextView>? = null
-): SystemContextView =
-    createSystemContextView(softwareSystem, key, description).applyIfNotNull(block)
+    /**
+     * @see [ViewSet.createSystemContextView]
+     */
+    fun SystemContextView(
+        softwareSystem: SoftwareSystem,
+        key: String,
+        description: String? = null,
+        block: ApplyBlock<ViewScope<SystemContextView>>? = null
+    ): SystemContextView =
+        views.createSystemContextView(softwareSystem, key, description)
+            .apply { block?.let { ViewScope<SystemContextView>(this).apply(it) } }
 
-/**
- * @see [ViewSet.createContainerView]
- */
-fun ViewSet.ContainerView(
-    softwareSystem: SoftwareSystem,
-    key: String,
-    description: String? = null,
-    block: ApplyBlock<ContainerView>? = null
-): ContainerView =
-    createContainerView(softwareSystem, key, description).applyIfNotNull(block)
+    /**
+     * @see [ViewSet.createContainerView]
+     */
+    fun ContainerView(
+        softwareSystem: SoftwareSystem,
+        key: String,
+        description: String? = null,
+        block: ApplyBlock<ViewScope<ContainerView>>? = null
+    ): ContainerView =
+        views.createContainerView(softwareSystem, key, description)
+            .apply { block?.let { ViewScope(this).apply(it) } }
 
-/**
- * @see [ViewSet.createComponentView]
- */
-fun ViewSet.ComponentView(
-    container: Container,
-    key: String,
-    description: String? = null,
-    block: ApplyBlock<ComponentView>? = null
-): ComponentView =
-    createComponentView(container, key, description).applyIfNotNull(block)
+    /**
+     * @see [ViewSet.createComponentView]
+     */
+    fun ComponentView(
+        container: Container,
+        key: String,
+        description: String? = null,
+        block: ApplyBlock<ViewScope<ComponentView>>? = null
+    ): ComponentView =
+        views.createComponentView(container, key, description)
+            .apply { block?.let { ViewScope(this).apply(it) } }
 
-/**
- * @see [ViewSet.createDynamicView]
- */
-fun ViewSet.DynamicView(
-    key: String,
-    description: String? = null,
-    block: ApplyBlock<DynamicView>? = null
-): DynamicView =
-    createDynamicView(key, description).applyIfNotNull(block)
+    /**
+     * @see [ViewSet.createDynamicView]
+     */
+    fun DynamicView(
+        key: String,
+        description: String? = null,
+        block: ApplyBlock<ViewScope<DynamicView>>? = null
+    ): DynamicView =
+        views.createDynamicView(key, description)
+            .apply { block?.let { ViewScope(this).apply(it) } }
 
-/**
- * @see [ViewSet.createDynamicView]
- */
-fun ViewSet.DynamicView(
-    softwareSystem: SoftwareSystem,
-    key: String,
-    description: String? = null,
-    block: ApplyBlock<DynamicView>? = null
-): DynamicView =
-    createDynamicView(softwareSystem, key, description).applyIfNotNull(block)
+    /**
+     * @see [ViewSet.createDynamicView]
+     */
+    fun DynamicView(
+        softwareSystem: SoftwareSystem,
+        key: String,
+        description: String? = null,
+        block: ApplyBlock<ViewScope<DynamicView>>? = null
+    ): DynamicView =
+        views.createDynamicView(softwareSystem, key, description)
+            .apply { block?.let { ViewScope(this).apply(it) } }
 
-/**
- * @see [ViewSet.createDynamicView]
- */
-fun ViewSet.DynamicView(
-    container: Container,
-    key: String,
-    description: String? = null,
-    block: ApplyBlock<DynamicView>? = null
-): DynamicView =
-    createDynamicView(container, key, description).applyIfNotNull(block)
+    /**
+     * @see [ViewSet.createDynamicView]
+     */
+    fun DynamicView(
+        container: Container,
+        key: String,
+        description: String? = null,
+        block: ApplyBlock<ViewScope<DynamicView>>? = null
+    ): DynamicView =
+        views.createDynamicView(container, key, description)
+            .apply { block?.let { ViewScope(this).apply(it) } }
 
-/**
- * @see [ViewSet.createDeploymentView]
- */
-fun ViewSet.DeploymentView(
-    key: String,
-    description: String? = null,
-    block: ApplyBlock<DeploymentView>? = null
-): DeploymentView =
-    createDeploymentView(key, description).applyIfNotNull(block)
+    /**
+     * @see [ViewSet.createDeploymentView]
+     */
+    fun DeploymentView(
+        key: String,
+        description: String? = null,
+        block: ApplyBlock<ViewScope<DeploymentView>>? = null
+    ): DeploymentView =
+        views.createDeploymentView(key, description)
+            .apply { block?.let { ViewScope(this).apply(it) } }
 
-/**
- * @see [ViewSet.createDeploymentView]
- */
-fun ViewSet.DeploymentView(
-    softwareSystem: SoftwareSystem,
-    key: String,
-    description: String? = null,
-    block: ApplyBlock<DeploymentView>? = null
-): DeploymentView =
-    createDeploymentView(softwareSystem, key, description).applyIfNotNull(block)
+    /**
+     * @see [ViewSet.createDeploymentView]
+     */
+    fun DeploymentView(
+        softwareSystem: SoftwareSystem,
+        key: String,
+        description: String? = null,
+        block: ApplyBlock<ViewScope<DeploymentView>>? = null
+    ): DeploymentView =
+        views.createDeploymentView(softwareSystem, key, description)
+            .apply { block?.let { ViewScope(this).apply(it) } }
 
-/**
- * @see [ViewSet.createFilteredView]
- */
-fun ViewSet.FilteredView(
-    staticView: StaticView,
-    key: String,
-    description: String? = null,
-    mode: FilterMode,
-    vararg tags: String,
-    block: ApplyBlock<FilteredView>? = null
-): FilteredView =
-    createFilteredView(staticView, key, description, mode, *tags).applyIfNotNull(block)
+    /**
+     * @see [ViewSet.createFilteredView]
+     */
+    fun FilteredView(
+        staticView: StaticView,
+        key: String,
+        description: String? = null,
+        mode: FilterMode,
+        vararg tags: String,
+        block: ApplyBlock<FilteredView>? = null
+    ): FilteredView =
+        views.createFilteredView(staticView, key, description, mode, *tags)
+            .applyIfNotNull(block)
 
-/**
- * @see [ViewSet.configuration]
- * @see [com.structurizr.view.Configuration.styles]
- */
-fun ViewSet.styles(block: ApplyBlock<Styles>): Styles =
-    configuration.styles.apply(block)
+    /**
+     * @see [ViewSet.createDefaultViews]
+     */
+    fun defaultViews() {
+        views.createDefaultViews()
+    }
+
+    /**
+     * @see [ViewSet.configuration]
+     * @param block [StylesScope]
+     */
+    fun styles(block: ApplyBlock<StylesScope>): Styles =
+        views.configuration.styles.apply { StylesScope(this).apply(block) }
+}

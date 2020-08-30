@@ -8,11 +8,11 @@ import com.structurizr.model.StaticStructureElementInstance
 /**
  * @see [StaticStructureElementInstance.addHealthCheck]
  */
-fun StaticStructureElementInstance.HealthCheck(
+fun <TElement : StaticStructureElementInstance> ElementScope<TElement>.HealthCheck(
     name: String,
     url: String,
     interval: Int = 60,
     timeout: Long = 0,
     block: ApplyBlock<HttpHealthCheck>? = null
 ): HttpHealthCheck =
-    addHealthCheck(name, url, interval, timeout).applyIfNotNull(block)
+    element.addHealthCheck(name, url, interval, timeout).applyIfNotNull(block)

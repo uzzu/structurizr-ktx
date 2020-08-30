@@ -8,20 +8,31 @@ import com.structurizr.view.ElementStyle
 import com.structurizr.view.RelationshipStyle
 import com.structurizr.view.Styles
 
-/**
- * @see [Styles.addElementStyle]
- */
-fun Styles.Element(
-    tag: String,
-    block: ApplyBlock<ElementStyle>? = null
-): ElementStyle =
-    addElementStyle(tag).applyIfNotNull(block)
+class StylesScope(
+    private val styles: Styles
+) {
+    /**
+     * @see [Styles.addElementStyle]
+     */
+    fun element(
+        tag: String,
+        block: ApplyBlock<ElementStyle>? = null
+    ): ElementStyle =
+        styles.addElementStyle(tag).applyIfNotNull(block)
 
-/**
- * @see [Styles.addRelationshipStyle]
- */
-fun Styles.Relationship(
-    tag: String,
-    block: ApplyBlock<RelationshipStyle>? = null
-): RelationshipStyle =
-    addRelationshipStyle(tag).applyIfNotNull(block)
+    /**
+     * @see [Styles.addRelationshipStyle]
+     */
+    fun relationship(
+        tag: String,
+        block: ApplyBlock<RelationshipStyle>? = null
+    ): RelationshipStyle =
+        styles.addRelationshipStyle(tag).applyIfNotNull(block)
+
+    /**
+     * @see [Styles.addDefaultStyles]
+     */
+    fun default() {
+        styles.addDefaultStyles()
+    }
+}

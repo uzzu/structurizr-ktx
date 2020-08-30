@@ -8,7 +8,28 @@ import com.structurizr.model.CodeElement
 import com.structurizr.model.Component
 
 /**
+ * @see [Component.technology]
+ */
+var ElementScope<Component>.technology: String?
+    get() = element.technology
+    set(value) {
+        element.technology = value
+    }
+
+/**
+ * @see [Component.setType]
+ */
+fun ElementScope<Component>.Code(
+    type: String,
+    block: ApplyBlock<CodeElement>
+): CodeElement =
+    element.setType(type).applyIfNotNull(block)
+
+/**
  * @see [Component.addSupportingType]
  */
-fun Component.SupportingType(type: String, block: ApplyBlock<CodeElement>? = null): CodeElement =
-    addSupportingType(type).applyIfNotNull(block)
+fun ElementScope<Component>.SupportingType(
+    type: String,
+    block: ApplyBlock<CodeElement>? = null
+): CodeElement =
+    element.addSupportingType(type).applyIfNotNull(block)

@@ -4,3 +4,6 @@ continuation_indent_size = 4
 max_line_length = 127
 insert_final_newline = true
 disabled_rules = import-ordering
+
+[*Dsl.kt]
+disabled_rules = import-ordering, filename

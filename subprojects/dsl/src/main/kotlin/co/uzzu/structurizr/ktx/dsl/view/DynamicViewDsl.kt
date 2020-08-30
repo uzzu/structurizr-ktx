@@ -11,63 +11,62 @@ import com.structurizr.view.RelationshipView
 /**
  * @see [DeploymentView.add]
  */
-fun DynamicView.Relationship(
+fun InclusionScope<DynamicView>.relationship(
     source: Element,
     destination: Element,
     block: ApplyBlock<RelationshipView>? = null
 ): RelationshipView =
-    add(source, "", destination).applyIfNotNull(block)
+    view.add(source, "", destination).applyIfNotNull(block)
 
 /**
  * @see [DeploymentView.add]
  */
-fun DynamicView.Relationship(
+fun InclusionScope<DynamicView>.relationship(
     source: Element,
     description: String,
     destination: Element,
     block: ApplyBlock<RelationshipView>? = null
-
 ): RelationshipView =
-    add(source, description, destination).applyIfNotNull(block)
+    view.add(source, description, destination).applyIfNotNull(block)
 
 /**
  * Call startParallelSequence, and endParallelSequence before and after apply block.
  * @param block [ParallelSequenceScope]
  */
-fun DynamicView.parallelSequence(
+fun InclusionScope<DynamicView>.parallelSequence(
     block: ApplyBlock<ParallelSequenceScope>
 ) {
-    startParallelSequence()
+    view.startParallelSequence()
     try {
         ParallelSequenceScope(this).apply(block)
     } finally {
-        endParallelSequence()
+        view.endParallelSequence()
     }
 }
 
 class ParallelSequenceScope(
-    private val view: DynamicView
+    private val scope: InclusionScope<DynamicView>
 ) {
     /**
      * @see [DynamicView.add]
      */
-    fun Relationship(
+    fun relationship(
         source: Element,
         destination: Element,
         block: ApplyBlock<RelationshipView>? = null
     ): RelationshipView =
-        view.Relationship(source, "", destination).applyIfNotNull(block)
+        scope.relationship(source, destination, block)
 
     /**
      * @see [DynamicView.add]
      */
-    fun Relationship(
+    fun relationship(
         source: Element,
         description: String,
         destination: Element,
         block: ApplyBlock<RelationshipView>? = null
     ): RelationshipView =
-        view.Relationship(source, description, destination).applyIfNotNull(block)
+        scope.relationship(source, description, destination, block)
 
     /**
      * @see [DynamicView.parallelSequence]
@@ -75,11 +74,6 @@ class ParallelSequenceScope(
     fun parallelSequence(
         block: ApplyBlock<ParallelSequenceScope>
     ) {
-        view.startParallelSequence()
-        try {
-            ParallelSequenceScope(view).apply(block)
-        } finally {
-            view.endParallelSequence()
-        }
+        scope.parallelSequence(block)
     }
 }
