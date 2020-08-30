@@ -1,7 +1,7 @@
 @file:Repository("http://jcenter.bintray.com")
 @file:DependsOn("com.structurizr:structurizr-core:1.5.0")
 @file:DependsOn("com.structurizr:structurizr-plantuml:1.5.0")
-@file:DependsOn("co.uzzu.structurizr.ktx:dsl:0.0.2")
+@file:DependsOn("co.uzzu.structurizr.ktx:dsl:0.0.3")
 
 import co.uzzu.structurizr.ktx.dsl.*
 import co.uzzu.structurizr.ktx.dsl.model.*
@@ -17,8 +17,8 @@ val MESSAGE_BUS_TAG = "Message Bus"
 val DATASTORE_TAG = "Database"
 
 val workspace = Workspace(
-    "Microservices example",
-    "An example of a microservices architecture, which includes asynchronous and parallel behaviour."
+    name = "Microservices example",
+    description = "An example of a microservices architecture, which includes asynchronous and parallel behaviour."
 ) {
 
     lateinit var customer: Person
@@ -81,82 +81,103 @@ val workspace = Workspace(
             }
 
             customer.uses(customerApplication, "Uses")
-            customerApplication.uses(
-                customerService,
-                "Updates customer information using",
-                "JSON/HTTPS",
-                InteractionStyle.Synchronous
-            )
-            customerService.uses(messageBus, "Sends customer update events to", "", InteractionStyle.Asynchronous)
-            customerService.uses(customerDatabase, "Stores data in", "JDBC", InteractionStyle.Synchronous)
-            customerService.uses(customerApplication, "Sends events to", "WebSocket", InteractionStyle.Asynchronous)
-            messageBus.uses(reportingService, "Sends customer update events to", "", InteractionStyle.Asynchronous)
-            messageBus.uses(auditService, "Sends customer update events to", "", InteractionStyle.Asynchronous)
-            reportingService.uses(reportingDatabase, "Stores data in", "", InteractionStyle.Synchronous)
-            auditService.uses(auditStore, "Stores events in", "", InteractionStyle.Synchronous)
+            customerApplication.uses(customerService) {
+                description = "Updates customer information using"
+                technology = "JSON/HTTPS"
+                interactionStyle = InteractionStyle.Synchronous
+            }
+            customerService.uses(messageBus) {
+                description = "Sends customer update events to"
+                interactionStyle = InteractionStyle.Asynchronous
+            }
+            customerService.uses(customerDatabase) {
+                description = "Stores data in"
+                technology = "JDBC"
+                interactionStyle = InteractionStyle.Synchronous
+            }
+            customerService.uses(customerApplication) {
+                description = "Sends events to"
+                technology = "WebSocket"
+                interactionStyle = InteractionStyle.Asynchronous
+            }
+            messageBus.uses(reportingService) {
+                description = "Sends customer update events to"
+                interactionStyle = InteractionStyle.Asynchronous
+            }
+            messageBus.uses(auditService) {
+                description = "Sends customer update events to"
+                interactionStyle = InteractionStyle.Asynchronous
+            }
+            reportingService.uses(reportingDatabase) {
+                description = "Stores data in"
+                interactionStyle = InteractionStyle.Synchronous
+            }
+            auditService.uses(auditStore) {
+                description = "Stores events in"
+                interactionStyle = InteractionStyle.Synchronous
+            }
         }
     }
 
     views {
         ContainerView(softwareSystem, "Container") {
-            addAllContainers()
+            includes {
+                allContainers()
+            }
         }
-        DynamicView(
-            softwareSystem,
-            "CustomerUpdateEvent",
-            "This diagram shows what happens when a customer updates their details."
-        ) {
-            Relationship(customer, customerApplication)
-            Relationship(customerApplication, customerService)
+        DynamicView(softwareSystem, "CustomerUpdateEvent") {
+            description = "This diagram shows what happens when a customer updates their details."
 
-            Relationship(customerService, customerDatabase)
-            Relationship(customerService, messageBus)
+            includes {
+                relationship(customer, customerApplication)
+                relationship(customerApplication, customerService)
+                relationship(customerService, customerDatabase)
+                relationship(customerService, messageBus)
 
-            parallelSequence {
-                Relationship(messageBus, reportingService)
-                Relationship(reportingService, reportingDatabase)
-            }
-
-            parallelSequence {
-                Relationship(messageBus, auditService)
-                Relationship(auditService, auditStore)
-            }
-
-            parallelSequence {
-                Relationship(customerService, "Confirms update to", customerApplication)
+                parallelSequence {
+                    relationship(messageBus, reportingService)
+                    relationship(reportingService, reportingDatabase)
+                }
+                parallelSequence {
+                    relationship(messageBus, auditService)
+                    relationship(auditService, auditStore)
+                }
+                parallelSequence {
+                    relationship(customerService, "Confirms update to", customerApplication)
+                }
             }
         }
 
         styles {
-            Element(Tags.ELEMENT) {
+            element(Tags.ELEMENT) {
                 color = "#000000"
             }
-            Element(Tags.PERSON) {
+            element(Tags.PERSON) {
                 background = "#ffbf00"
                 shape = Shape.Person
             }
-            Element(Tags.CONTAINER) {
-                background = "#facc2E"
+            element(Tags.CONTAINER) {
+                background = "#facc2e"
             }
-            Element(MESSAGE_BUS_TAG) {
+            element(MESSAGE_BUS_TAG) {
                 width = 1600
                 shape = Shape.Pipe
             }
-            Element(MICROSERVICE_TAG) {
+            element(MICROSERVICE_TAG) {
                 shape = Shape.Hexagon
             }
-            Element(DATASTORE_TAG) {
+            element(DATASTORE_TAG) {
                 background = "#f5da81"
                 shape = Shape.Cylinder
             }
 
-            Relationship(Tags.RELATIONSHIP) {
+            relationship(Tags.RELATIONSHIP) {
                 routing = Routing.Orthogonal
             }
-            Relationship(Tags.ASYNCHRONOUS) {
+            relationship(Tags.ASYNCHRONOUS) {
                 dashed = true
             }
-            Relationship(Tags.SYNCHRONOUS) {
+            relationship(Tags.SYNCHRONOUS) {
                 dashed = false
             }
         }
