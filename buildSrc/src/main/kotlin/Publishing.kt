@@ -2,7 +2,7 @@ import org.gradle.api.Project
 
 private const val majorVersion: Int = 0
 private const val minorVersion: Int = 0
-private val patchVersion = 2
+private val patchVersion = 3
 
 val Project.publishingGroupId: String
     get() = "co.uzzu.structurizr.ktx"

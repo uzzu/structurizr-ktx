@@ -6,14 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.0.2] - 2020-08-28
+## [0.0.3] - 2020-08-30
+
+### Added
+- Add InclusionScope and ExclusionScope to add and remove element from view.
+
+### Changed
+- Provide all element scopes
+
+## [0.0.2] - 2020-08-29
+
 ### Added
 - Add function `Workspace(name: String, description: String, block: Workspace.() -> Unit): Workspace`
 
 ### Removed
 - Remove unnecessary DSL function overriding Java API
 
-## [0.0.1] - 2014-08-29
+## [0.0.1] - 2014-08-28
 
 ### Added
 
