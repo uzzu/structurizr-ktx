@@ -10,7 +10,7 @@ This library contains an implementation of the Kotlin DSL for [structurizr/java]
 
 ```kotlin
 dependencies {
-    implementation("co.uzzu.structurizr.ktx:dsl:0.0.4")
+    implementation("co.uzzu.structurizr.ktx:dsl:0.0.5")
 }
 ```
 
@@ -18,7 +18,7 @@ dependencies {
 
 ```kotlin
 @file:DependsOn("com.structurizr:structurizr-core:1.5.0")
-@file:DependsOn("co.uzzu.structurizr.ktx:dsl:0.0.4")
+@file:DependsOn("co.uzzu.structurizr.ktx:dsl:0.0.5")
 
 import co.uzzu.structurizr.ktx.dsl.*
 import co.uzzu.structurizr.ktx.dsl.model.*
