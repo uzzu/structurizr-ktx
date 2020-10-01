@@ -7,38 +7,54 @@ import co.uzzu.structurizr.ktx.dsl.view.ViewSetScope
 import com.structurizr.Workspace
 import com.structurizr.model.Model
 import com.structurizr.view.ViewSet
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 /**
  * @see [Workspace]
  */
+@OptIn(ExperimentalContracts::class)
 fun Workspace(
     name: String,
     description: String,
-    block: ApplyBlock<WorkspaceScope>
-): Workspace =
-    Workspace(name, description)
-        .apply { WorkspaceScope(this).apply(block) }
+    block: WorkspaceScope.() -> Unit
+): Workspace {
+    contract {
+        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+    }
 
-/**
- * @see [Workspace.model]
- * @param block [ModelScope]
- */
-fun Workspace.model(block: ApplyBlock<Model>): Model =
-    model.apply(block)
+    return Workspace(name, description)
+        .apply { block(WorkspaceScope(this)) }
+}
 
-/**
- * @see [Workspace.views]
- * @param block [ViewSetScope]
- */
-fun Workspace.views(block: ApplyBlock<ViewSet>): ViewSet =
-    views.apply(block)
-
+@StructurizrDslMarker
+@OptIn(ExperimentalContracts::class)
 class WorkspaceScope(
     private val workspace: Workspace
 ) {
-    fun model(block: ApplyBlock<ModelScope>): Model =
-        workspace.model.apply { ModelScope(this).apply(block) }
+    /**
+     * @see [Workspace.model]
+     * @param block [ModelScope]
+     */
+    fun model(block: ModelScope.() -> Unit): Model {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
 
-    fun views(block: ApplyBlock<ViewSetScope>): ViewSet =
-        workspace.views.apply { ViewSetScope(this).apply(block) }
+        return workspace.model
+            .apply { block(ModelScope(this)) }
+    }
+
+    /**
+     * @see [Workspace.views]
+     * @param block [ViewSetScope]
+     */
+    fun views(block: ViewSetScope.() -> Unit): ViewSet {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return workspace.views.apply { block(ViewSetScope(this)) }
+    }
 }

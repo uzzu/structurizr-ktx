@@ -2,8 +2,7 @@
 
 package co.uzzu.structurizr.ktx.dsl.model
 
-import co.uzzu.structurizr.ktx.dsl.ApplyBlock
-import co.uzzu.structurizr.ktx.dsl.applyIfNotNull
+import co.uzzu.structurizr.ktx.dsl.StructurizrDslMarker
 import com.structurizr.model.InteractionStyle
 import com.structurizr.model.Perspective
 import com.structurizr.model.Relationship
@@ -11,7 +10,9 @@ import com.structurizr.model.descriptionPublic
 import com.structurizr.model.interactionStylePublic
 import com.structurizr.model.technologyPublic
 
-class RelationshipScope(
+@StructurizrDslMarker
+class RelationshipScope
+internal constructor(
     private val relationship: Relationship
 ) {
     /**
@@ -60,8 +61,7 @@ class RelationshipScope(
      */
     fun Perspective(
         name: String,
-        description: String,
-        block: ApplyBlock<Perspective>? = null
+        description: String
     ): Perspective =
-        relationship.addPerspective(name, description).applyIfNotNull(block)
+        relationship.addPerspective(name, description)
 }

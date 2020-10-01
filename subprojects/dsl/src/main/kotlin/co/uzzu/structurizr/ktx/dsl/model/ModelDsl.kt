@@ -2,26 +2,38 @@
 
 package co.uzzu.structurizr.ktx.dsl.model
 
-import co.uzzu.structurizr.ktx.dsl.ApplyBlock
+import co.uzzu.structurizr.ktx.dsl.StructurizrDslMarker
+import co.uzzu.structurizr.ktx.dsl.doNothing
 import com.structurizr.model.DeploymentNode
 import com.structurizr.model.Location
 import com.structurizr.model.Model
 import com.structurizr.model.Person
 import com.structurizr.model.SoftwareSystem
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
-class ModelScope(
+@StructurizrDslMarker
+@OptIn(ExperimentalContracts::class)
+class ModelScope
+internal constructor(
     private val model: Model
-) {
+) : ModelRelationshipWritable {
     /**
      * @see [Model.addSoftwareSystem]
      */
     fun SoftwareSystem(
         name: String,
         description: String? = null,
-        block: ApplyBlock<ElementScope<SoftwareSystem>>? = null
-    ): SoftwareSystem =
-        model.addSoftwareSystem(name, description)
-            .apply { block?.let { ElementScope(this).apply(it) } }
+        block: SoftwareSystemScope.() -> Unit = Any::doNothing
+    ): SoftwareSystem {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return model.addSoftwareSystem(name, description)
+            .apply { block(SoftwareSystemScope(this)) }
+    }
 
     /**
      * @see [Model.addSoftwareSystem]
@@ -30,10 +42,15 @@ class ModelScope(
         location: Location,
         name: String,
         description: String? = null,
-        block: ApplyBlock<ElementScope<SoftwareSystem>>? = null
-    ): SoftwareSystem =
-        model.addSoftwareSystem(location, name, description)
-            .apply { block?.let { ElementScope(this).apply(it) } }
+        block: SoftwareSystemScope.() -> Unit = Any::doNothing
+    ): SoftwareSystem {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return model.addSoftwareSystem(location, name, description)
+            .apply { block(SoftwareSystemScope(this)) }
+    }
 
     /**
      * @see [Model.addPerson]
@@ -41,10 +58,15 @@ class ModelScope(
     fun Person(
         name: String,
         description: String? = null,
-        block: ApplyBlock<ElementScope<Person>>? = null
-    ): Person =
-        model.addPerson(name, description)
-            .apply { block?.let { ElementScope(this).apply(it) } }
+        block: PersonScope.() -> Unit = Any::doNothing
+    ): Person {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return model.addPerson(name, description)
+            .apply { block(PersonScope(this)) }
+    }
 
     /**
      * @see [Model.addPerson]
@@ -52,11 +74,16 @@ class ModelScope(
     fun Person(
         location: Location,
         name: String,
-        description: String?,
-        block: ApplyBlock<ElementScope<Person>>? = null
-    ): Person =
-        model.addPerson(location, name, description)
-            .apply { block?.let { ElementScope(this).apply(it) } }
+        description: String? = null,
+        block: PersonScope.() -> Unit = Any::doNothing
+    ): Person {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return model.addPerson(location, name, description)
+            .apply { block(PersonScope(this)) }
+    }
 
     /**
      * @see [Model.addDeploymentNode]
@@ -67,10 +94,15 @@ class ModelScope(
         technology: String? = null,
         instances: Int = 1,
         properties: Map<String, String>? = null,
-        block: ApplyBlock<ElementScope<DeploymentNode>>? = null
-    ): DeploymentNode =
-        model.addDeploymentNode(name, description, technology, instances, properties)
-            .apply { block?.let { ElementScope(this).apply(it) } }
+        block: DeploymentNodeScope.() -> Unit = Any::doNothing
+    ): DeploymentNode {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return model.addDeploymentNode(name, description, technology, instances, properties)
+            .apply { block(DeploymentNodeScope(this)) }
+    }
 
     /**
      * @see [Model.addDeploymentNode]
@@ -82,8 +114,13 @@ class ModelScope(
         technology: String? = null,
         instances: Int = 1,
         properties: Map<String, String>? = null,
-        block: ApplyBlock<ElementScope<DeploymentNode>>? = null
-    ): DeploymentNode =
-        model.addDeploymentNode(environment, name, description, technology, instances, properties)
-            .apply { block?.let { ElementScope(this).apply(it) } }
+        block: DeploymentNodeScope.() -> Unit = Any::doNothing
+    ): DeploymentNode {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return model.addDeploymentNode(environment, name, description, technology, instances, properties)
+            .apply { block(DeploymentNodeScope(this)) }
+    }
 }

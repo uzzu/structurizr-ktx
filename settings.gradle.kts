@@ -7,5 +7,6 @@ fun Settings.includeSubProject(name: String) {
 }
 
 includeSubProject("dsl")
+includeSubProject("dsl-test")
 
 // endregion

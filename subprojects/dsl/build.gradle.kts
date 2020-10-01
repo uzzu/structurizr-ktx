@@ -9,7 +9,7 @@ plugins {
 }
 
 dependencies {
-    implementation("com.structurizr:structurizr-core:1.5.0")
+    implementation("com.structurizr:structurizr-core:1.6.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
@@ -21,10 +21,16 @@ java {
 
 tasks {
     compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions {
+            jvmTarget = "1.8"
+            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn", "-Xjvm-default=all")
+        }
     }
     compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions {
+            jvmTarget = "1.8"
+            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn", "-Xjvm-default=all")
+        }
     }
 }
 
@@ -40,7 +46,7 @@ val dokkaJar by tasks.creating(Jar::class) {
 }
 
 group = publishingGroupId
-version = publishingArtifactVersion(env.PUBLISH_PRODUCTION.isPresent)
+version = publishingArtifactVersion(true)
 setProperty("archivesBaseName", publishingArtifactIdBase)
 
 publishing {
@@ -61,7 +67,7 @@ publishing {
             from(components.getByName("java"))
             groupId = publishingGroupId
             artifactId = publishingArtifactIdBase
-            version = publishingArtifactVersion(env.PUBLISH_PRODUCTION.isPresent)
+            version = publishingArtifactVersion(true)
 
             artifact(sourcesJar)
             artifact(dokkaJar)

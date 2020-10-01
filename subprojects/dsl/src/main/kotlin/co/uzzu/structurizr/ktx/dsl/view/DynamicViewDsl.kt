@@ -2,50 +2,95 @@
 
 package co.uzzu.structurizr.ktx.dsl.view
 
-import co.uzzu.structurizr.ktx.dsl.ApplyBlock
-import co.uzzu.structurizr.ktx.dsl.applyIfNotNull
+import co.uzzu.structurizr.ktx.dsl.StructurizrDslMarker
+import co.uzzu.structurizr.ktx.dsl.doNothing
 import com.structurizr.model.Element
 import com.structurizr.view.DynamicView
 import com.structurizr.view.RelationshipView
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
-/**
- * @see [DeploymentView.add]
- */
-fun InclusionScope<DynamicView>.relationship(
-    source: Element,
-    destination: Element,
-    block: ApplyBlock<RelationshipView>? = null
-): RelationshipView =
-    view.add(source, "", destination).applyIfNotNull(block)
+@StructurizrDslMarker
+class DynamicViewScope
+internal constructor(
+    view: DynamicView
+) : ViewScope<DynamicView, DynamicViewInclusionScope, DynamicViewExclusionScope>(
+    view,
+    DynamicViewInclusionScope(view),
+    DynamicViewExclusionScope(view)
+)
 
-/**
- * @see [DeploymentView.add]
- */
-fun InclusionScope<DynamicView>.relationship(
-    source: Element,
-    description: String,
-    destination: Element,
-    block: ApplyBlock<RelationshipView>? = null
-): RelationshipView =
-    view.add(source, description, destination).applyIfNotNull(block)
+@StructurizrDslMarker
+@OptIn(ExperimentalContracts::class)
+class DynamicViewInclusionScope
+internal constructor(
+    view: DynamicView
+) : InclusionScope<DynamicView>(view) {
 
-/**
- * Call startParallelSequence, and endParallelSequence before and after apply block.
- * @param block [ParallelSequenceScope]
- */
-fun InclusionScope<DynamicView>.parallelSequence(
-    block: ApplyBlock<ParallelSequenceScope>
-) {
-    view.startParallelSequence()
-    try {
-        ParallelSequenceScope(this).apply(block)
-    } finally {
-        view.endParallelSequence()
+    /**
+     * @see [DeploymentView.add]
+     */
+    fun relationship(
+        source: Element,
+        destination: Element,
+        description: String = "",
+        block: RelationshipView.() -> Unit = Any::doNothing
+    ): RelationshipView {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return view.add(source, description, destination).apply(block)
+    }
+
+    /**
+     * @see [DeploymentView.add]
+     */
+    fun relationship(
+        source: Element,
+        description: String,
+        destination: Element,
+        block: RelationshipView.() -> Unit = Any::doNothing
+    ): RelationshipView {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return view.add(source, description, destination).apply(block)
+    }
+
+    /**
+     * Call startParallelSequence, and endParallelSequence before and after apply block.
+     * @param block [ParallelSequenceScope]
+     */
+    fun parallelSequence(
+        block: ParallelSequenceScope.() -> Unit
+    ) {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        view.startParallelSequence()
+        try {
+            ParallelSequenceScope(this).apply(block)
+        } finally {
+            view.endParallelSequence()
+        }
     }
 }
 
-class ParallelSequenceScope(
-    private val scope: InclusionScope<DynamicView>
+@StructurizrDslMarker
+class DynamicViewExclusionScope
+internal constructor(
+    view: DynamicView
+) : ExclusionScope<DynamicView>(view)
+
+@StructurizrDslMarker
+@OptIn(ExperimentalContracts::class)
+class ParallelSequenceScope
+internal constructor(
+    private val scope: DynamicViewInclusionScope
 ) {
     /**
      * @see [DynamicView.add]
@@ -53,9 +98,15 @@ class ParallelSequenceScope(
     fun relationship(
         source: Element,
         destination: Element,
-        block: ApplyBlock<RelationshipView>? = null
-    ): RelationshipView =
-        scope.relationship(source, destination, block)
+        description: String = "",
+        block: RelationshipView.() -> Unit = Any::doNothing
+    ): RelationshipView {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return scope.relationship(source, description, destination, block)
+    }
 
     /**
      * @see [DynamicView.add]
@@ -64,15 +115,20 @@ class ParallelSequenceScope(
         source: Element,
         description: String,
         destination: Element,
-        block: ApplyBlock<RelationshipView>? = null
-    ): RelationshipView =
-        scope.relationship(source, description, destination, block)
+        block: RelationshipView.() -> Unit = Any::doNothing
+    ): RelationshipView {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return scope.relationship(source, description, destination, block)
+    }
 
     /**
      * @see [DynamicView.parallelSequence]
      */
     fun parallelSequence(
-        block: ApplyBlock<ParallelSequenceScope>
+        block: ParallelSequenceScope.() -> Unit
     ) {
         scope.parallelSequence(block)
     }

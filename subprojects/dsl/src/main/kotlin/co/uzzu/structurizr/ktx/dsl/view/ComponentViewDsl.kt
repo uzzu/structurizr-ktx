@@ -1,73 +1,98 @@
 package co.uzzu.structurizr.ktx.dsl.view
 
+import co.uzzu.structurizr.ktx.dsl.StructurizrDslMarker
 import com.structurizr.model.Component
 import com.structurizr.model.Container
 import com.structurizr.view.ComponentView
 
-/**
- * @see [ComponentView.setExternalSoftwareSystemBoundariesVisible]
- */
-var ViewScope<ComponentView>.isExternalContainerBoundariesVisible: Boolean
-    get() = view.externalContainerBoundariesVisible
-    set(value) {
-        view.setExternalSoftwareSystemBoundariesVisible(value)
+@StructurizrDslMarker
+class ComponentViewScope
+internal constructor(
+    view: ComponentView
+) : StaticViewScope<ComponentView, ComponentViewInclusionScope, ComponentViewExclusionScope>(
+    view,
+    ComponentViewInclusionScope(view),
+    ComponentViewExclusionScope(view)
+) {
+    /**
+     * @see [ComponentView.setExternalSoftwareSystemBoundariesVisible]
+     */
+    var isExternalContainerBoundariesVisible: Boolean
+        get() = view.externalContainerBoundariesVisible
+        set(value) {
+            view.setExternalSoftwareSystemBoundariesVisible(value)
+        }
+}
+
+@StructurizrDslMarker
+class ComponentViewInclusionScope
+internal constructor(
+    view: ComponentView
+) : StaticViewInclusionScope<ComponentView>(view) {
+
+    /**
+     * @see [ComponentView.addAllContainers]
+     */
+    fun allContainers() {
+        view.addAllContainers()
     }
 
-/**
- * @see [ComponentView.addAllContainers]
- */
-fun InclusionScope<ComponentView>.allContainers() {
-    view.addAllContainers()
+    /**
+     * @see [ComponentView.addAllComponents]
+     */
+    fun allComponents() {
+        view.addAllComponents()
+    }
+
+    /**
+     * @see [ComponentView.addExternalDependencies]
+     */
+    fun externalDependencies() {
+        view.addExternalDependencies()
+    }
+
+    /**
+     * @see [ComponentView.add]
+     */
+    fun container(
+        container: Container,
+        addRelationship: Boolean = true
+    ) {
+        view.add(container, addRelationship)
+    }
+
+    /**
+     * @see [ComponentView.add]
+     */
+    fun component(
+        component: Component,
+        addRelationship: Boolean = true
+    ) {
+        view.add(component, addRelationship)
+    }
 }
 
-/**
- * @see [ComponentView.addAllComponents]
- */
-fun InclusionScope<ComponentView>.allComponents() {
-    view.addAllComponents()
-}
+@StructurizrDslMarker
+class ComponentViewExclusionScope
+internal constructor(
+    view: ComponentView
+) : StaticViewExclusionScope<ComponentView>(view) {
 
-/**
- * @see [ComponentView.addExternalDependencies]
- */
-fun InclusionScope<ComponentView>.externalDependencies() {
-    view.addExternalDependencies()
-}
+    /**
+     * @see [ComponentView.remove]
+     */
+    fun container(
+        container: Container
+    ) {
+        view.remove(container)
+    }
 
-/**
- * @see [ComponentView.add]
- */
-fun InclusionScope<ComponentView>.container(
-    container: Container,
-    addRelationship: Boolean = true
-) {
-    view.add(container, addRelationship)
-}
-
-/**
- * @see [ComponentView.add]
- */
-fun InclusionScope<ComponentView>.component(
-    component: Component,
-    addRelationship: Boolean = true
-) {
-    view.add(component, addRelationship)
-}
-
-/**
- * @see [ComponentView.remove]
- */
-fun ExclusionScope<ComponentView>.container(
-    container: Container
-) {
-    view.remove(container)
-}
-
-/**
- * @see [ComponentView.remove]
- */
-fun ExclusionScope<ComponentView>.component(
-    component: Component
-) {
-    view.remove(component)
+    /**
+     * @see [ComponentView.remove]
+     */
+    fun component(
+        component: Component
+    ) {
+        view.remove(component)
+    }
 }
