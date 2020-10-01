@@ -11,7 +11,7 @@ internal constructor(
     /**
      * @see [HttpHealthCheck.addHeader]
      */
-    fun HttpHealthCheck.header(name: String, value: String) {
+    fun header(name: String, value: String) {
         element.addHeader(name, value)
     }
 }
