@@ -23,13 +23,13 @@ tasks {
     compileKotlin {
         kotlinOptions {
             jvmTarget = "1.8"
-            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn", "-Xjvm-default=all")
+            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
         }
     }
     compileTestKotlin {
         kotlinOptions {
             jvmTarget = "1.8"
-            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn", "-Xjvm-default=all")
+            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
         }
     }
 }
