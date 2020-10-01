@@ -188,5 +188,4 @@ fun main() {
         val writer = StructurizrPlantUMLWriter()
         writer.write(workspace, out)
     }
-
 }
