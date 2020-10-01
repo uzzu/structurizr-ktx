@@ -1,116 +1,111 @@
 package co.uzzu.structurizr.ktx.dsl.view
 
-import co.uzzu.structurizr.ktx.dsl.ApplyBlock
 import com.structurizr.model.Element
 import com.structurizr.model.Relationship
 import com.structurizr.view.AutomaticLayout
 import com.structurizr.view.LayoutMergeStrategy
 import com.structurizr.view.PaperSize
 import com.structurizr.view.View
-import java.lang.UnsupportedOperationException
 
-class ViewScope<TView : View>(
-    internal val view: TView,
-    internal val inclusionScope: InclusionScope<TView> = InclusionScope(view),
-    internal val exclusionScope: ExclusionScope<TView> = ExclusionScope(view)
+abstract class ViewScope
+<TView : View, TInclusionScope : InclusionScope<TView>, TExclusionScope : ExclusionScope<TView>>
+internal constructor(
+    protected val view: TView,
+    private val inclusionScope: TInclusionScope,
+    private val exclusionScope: TExclusionScope
+) {
+    /**
+     * @see [View.title]
+     */
+    var title: String?
+        get() = view.title
+        set(value) {
+            view.title = value
+        }
+
+    /**
+     * @see [View.description]
+     */
+    var description: String?
+        get() = view.description
+        set(value) {
+            view.description = value
+        }
+
+    /**
+     * @see [View.paperSize]
+     */
+    var paperSize: PaperSize
+        get() = view.paperSize
+        set(value) {
+            view.paperSize = value
+        }
+
+    /**
+     * @see [View.layoutMergeStrategy]
+     */
+    var layoutMergeStrategy: LayoutMergeStrategy
+        get() = throw UnsupportedOperationException()
+        set(value) {
+            view.setLayoutMergeStrategy(value)
+        }
+
+    /**
+     * @see [InclusionScope]
+     */
+    fun includes(block: TInclusionScope.() -> Unit) {
+        inclusionScope.apply(block)
+    }
+
+    /**
+     * @see [ExclusionScope]
+     */
+    fun excludes(block: TExclusionScope.() -> Unit) {
+        exclusionScope.apply(block)
+    }
+
+    /**
+     * @see [AutomaticLayoutScope]
+     */
+    fun automaticLayout(block: AutomaticLayoutScope.() -> Unit) {
+        block(AutomaticLayoutScope(view))
+    }
+}
+
+abstract class InclusionScope<TView : View>
+internal constructor(
+    protected val view: TView
 )
 
-class InclusionScope<TView : View>(internal val view: TView)
-class ExclusionScope<TView : View>(internal val view: TView)
+abstract class ExclusionScope<TView : View>
+internal constructor(
+    protected val view: TView
+) {
 
-// region ViewScope
-
-/**
- * @see [View.title]
- */
-var <TView : View> ViewScope<TView>.title: String?
-    get() = view.title
-    set(value) {
-        view.title = value
+    /**
+     * @see [View.remove]
+     */
+    fun relationship(relationship: Relationship) {
+        view.remove(relationship)
     }
 
-/**
- * @see [View.description]
- */
-var <TView : View> ViewScope<TView>.description: String?
-    get() = view.description
-    set(value) {
-        view.description = value
+    /**
+     * @see [View.removeRelationshipsNotConnectedToElement]
+     */
+    fun relationshipsNotConnectedToElement(element: Element) {
+        view.removeRelationshipsNotConnectedToElement(element)
     }
 
-/**
- * @see [View.paperSize]
- */
-var <TView : View> ViewScope<TView>.paperSize: PaperSize
-    get() = view.paperSize
-    set(value) {
-        view.paperSize = value
+    /**
+     * @see [View.removeElementsWithNoRelationships]
+     */
+    fun elementsWithNoRelationships() {
+        view.removeElementsWithNoRelationships()
     }
-
-/**
- * @see [View.layoutMergeStrategy]
- */
-var <TView : View> ViewScope<TView>.layoutMergeStrategy: LayoutMergeStrategy
-    get() = throw UnsupportedOperationException()
-    set(value) {
-        view.setLayoutMergeStrategy(value)
-    }
-
-/**
- * @see [InclusionScope]
- */
-fun <TView : View> ViewScope<TView>.includes(block: ApplyBlock<InclusionScope<TView>>) {
-    inclusionScope.apply(block)
 }
 
-/**
- * @see [ExclusionScope]
- */
-fun <TView : View> ViewScope<TView>.excludes(block: ApplyBlock<ExclusionScope<TView>>) {
-    exclusionScope.apply(block)
-}
-
-// region AutomaticLayout
-
-/**
- * @see [AutomaticLayoutConfig]
- */
-val <TView : View> ViewScope<TView>.automaticLayout: AutomaticLayoutConfig
-    get() = AutomaticLayoutConfig(view)
-
-/**
- * @see [View.enableAutomaticLayout]
- */
-fun <TView : View> ViewScope<TView>.Dagre(
-    rankDirection: AutomaticLayout.RankDirection,
-    rankSeparation: Int,
-    nodeSeparation: Int,
-    edgeSeparation: Int,
-    vertices: Boolean
-): AutomaticLayoutParam.Dagre =
-    AutomaticLayoutParam.Dagre(
-        rankDirection,
-        rankSeparation,
-        nodeSeparation,
-        edgeSeparation,
-        vertices
-    )
-
-/**
- * @see [View.enableAutomaticLayout]
- */
-fun <TView : View> ViewScope<TView>.Graphviz(
-    rankDirection: AutomaticLayout.RankDirection,
-    rankSeparation: Int = 300,
-    nodeSeparation: Int = 300
-): AutomaticLayoutParam.Graphviz =
-    AutomaticLayoutParam.Graphviz(
-        rankDirection,
-        rankSeparation,
-        nodeSeparation
-    )
-
-class AutomaticLayoutConfig(
+class AutomaticLayoutScope
+internal constructor(
     private val view: View
 ) {
 
@@ -147,6 +142,38 @@ class AutomaticLayoutConfig(
             }
         }
     }
+
+    /**
+     * @see [View.enableAutomaticLayout]
+     */
+    fun Dagre(
+        rankDirection: AutomaticLayout.RankDirection,
+        rankSeparation: Int,
+        nodeSeparation: Int,
+        edgeSeparation: Int,
+        vertices: Boolean
+    ): AutomaticLayoutParam.Dagre =
+        AutomaticLayoutParam.Dagre(
+            rankDirection,
+            rankSeparation,
+            nodeSeparation,
+            edgeSeparation,
+            vertices
+        )
+
+    /**
+     * @see [View.enableAutomaticLayout]
+     */
+    fun Graphviz(
+        rankDirection: AutomaticLayout.RankDirection,
+        rankSeparation: Int = 300,
+        nodeSeparation: Int = 300
+    ): AutomaticLayoutParam.Graphviz =
+        AutomaticLayoutParam.Graphviz(
+            rankDirection,
+            rankSeparation,
+            nodeSeparation
+        )
 }
 
 /**
@@ -175,36 +202,3 @@ sealed class AutomaticLayoutParam {
         val nodeSeparation: Int
     ) : AutomaticLayoutParam()
 }
-
-// endregion
-
-// endregion
-
-// region InclusionScope
-
-// endregion
-
-// region ExclusionScope
-
-/**
- * @see [View.remove]
- */
-fun <TView : View> ExclusionScope<TView>.relationship(relationship: Relationship) {
-    view.remove(relationship)
-}
-
-/**
- * @see [View.removeRelationshipsNotConnectedToElement]
- */
-fun <TView : View> ExclusionScope<TView>.relationshipsNotConnectedToElement(element: Element) {
-    view.removeRelationshipsNotConnectedToElement(element)
-}
-
-/**
- * @see [View.removeElementsWithNoRelationships]
- */
-fun <TView : View> ExclusionScope<TView>.elementsWithNoRelationships() {
-    view.removeElementsWithNoRelationships()
-}
-
-// endregion

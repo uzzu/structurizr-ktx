@@ -2,34 +2,57 @@
 
 package co.uzzu.structurizr.ktx.dsl.model
 
-import co.uzzu.structurizr.ktx.dsl.ApplyBlock
-import co.uzzu.structurizr.ktx.dsl.applyIfNotNull
+import co.uzzu.structurizr.ktx.dsl.StructurizrDslMarker
+import co.uzzu.structurizr.ktx.dsl.doNothing
 import com.structurizr.model.CodeElement
 import com.structurizr.model.Component
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
-/**
- * @see [Component.technology]
- */
-var ElementScope<Component>.technology: String?
-    get() = element.technology
-    set(value) {
-        element.technology = value
+@StructurizrDslMarker
+@OptIn(ExperimentalContracts::class)
+class ComponentScope
+internal constructor(
+    element: Component
+) : StaticStructureElementScope<Component>(element) {
+
+    /**
+     * @see [Component.technology]
+     */
+    var technology: String?
+        get() = element.technology
+        set(value) {
+            element.technology = value
+        }
+
+    /**
+     * @see [Component.setType]
+     */
+    fun Code(
+        type: String,
+        block: CodeElementScope.() -> Unit = Any::doNothing
+    ): CodeElement {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
+
+        return element.setType(type)
+            .apply { block(CodeElementScope(this)) }
     }
 
-/**
- * @see [Component.setType]
- */
-fun ElementScope<Component>.Code(
-    type: String,
-    block: ApplyBlock<CodeElement>
-): CodeElement =
-    element.setType(type).applyIfNotNull(block)
+    /**
+     * @see [Component.addSupportingType]
+     */
+    fun SupportingType(
+        type: String,
+        block: CodeElementScope.() -> Unit = Any::doNothing
+    ): CodeElement {
+        contract {
+            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        }
 
-/**
- * @see [Component.addSupportingType]
- */
-fun ElementScope<Component>.SupportingType(
-    type: String,
-    block: ApplyBlock<CodeElement>? = null
-): CodeElement =
-    element.addSupportingType(type).applyIfNotNull(block)
+        return element.addSupportingType(type)
+            .apply { block(CodeElementScope(this)) }
+    }
+}

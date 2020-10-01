@@ -2,13 +2,14 @@
 
 package co.uzzu.structurizr.ktx.dsl.view
 
-import co.uzzu.structurizr.ktx.dsl.ApplyBlock
-import co.uzzu.structurizr.ktx.dsl.applyIfNotNull
+import co.uzzu.structurizr.ktx.dsl.StructurizrDslMarker
 import com.structurizr.view.ElementStyle
 import com.structurizr.view.RelationshipStyle
 import com.structurizr.view.Styles
 
-class StylesScope(
+@StructurizrDslMarker
+class StylesScope
+internal constructor(
     private val styles: Styles
 ) {
     /**
@@ -16,18 +17,18 @@ class StylesScope(
      */
     fun element(
         tag: String,
-        block: ApplyBlock<ElementStyle>? = null
+        block: ElementStyle.() -> Unit
     ): ElementStyle =
-        styles.addElementStyle(tag).applyIfNotNull(block)
+        styles.addElementStyle(tag).apply(block)
 
     /**
      * @see [Styles.addRelationshipStyle]
      */
     fun relationship(
         tag: String,
-        block: ApplyBlock<RelationshipStyle>? = null
+        block: RelationshipStyle.() -> Unit
     ): RelationshipStyle =
-        styles.addRelationshipStyle(tag).applyIfNotNull(block)
+        styles.addRelationshipStyle(tag).apply(block)
 
     /**
      * @see [Styles.addDefaultStyles]
