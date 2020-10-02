@@ -9,6 +9,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":dsl"))
     implementation("com.structurizr:structurizr-core:1.6.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
@@ -21,16 +22,10 @@ java {
 
 tasks {
     compileKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
-        }
+        kotlinOptions.jvmTarget = "1.8"
     }
     compileTestKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
-        }
+        kotlinOptions.jvmTarget = "1.8"
     }
 }
 
@@ -74,7 +69,9 @@ publishing {
 
             pom {
                 name.set(publishingArtifactIdBase)
-                description.set(MavenPublications.description("DSL for structurizr/java"))
+                description.set(
+                    MavenPublications.description("Multi-system context PlantUML diagram writer")
+                )
                 url.set(MavenPublications.url)
                 licenses {
                     license {
@@ -108,7 +105,7 @@ signing {
         useInMemoryPgpKeys(
             env.SIGNING_KEYID.orElse(""),
             env.SIGNING_KEY.orElse(""),
-            env.SIGNING_PASSWORD.orElse("")
+            env.SIGNING_PASSOWORD.orElse("")
         )
     }
 }

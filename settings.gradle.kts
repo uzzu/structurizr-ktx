@@ -8,5 +8,6 @@ fun Settings.includeSubProject(name: String) {
 
 includeSubProject("dsl")
 includeSubProject("dsl-test")
+includeSubProject("plantuml-multisystem")
 
 // endregion

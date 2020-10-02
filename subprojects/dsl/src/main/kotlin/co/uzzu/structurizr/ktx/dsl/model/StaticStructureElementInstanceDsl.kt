@@ -1,6 +1,5 @@
 package co.uzzu.structurizr.ktx.dsl.model
 
-import co.uzzu.structurizr.ktx.dsl.StructurizrDslMarker
 import co.uzzu.structurizr.ktx.dsl.doNothing
 import com.structurizr.model.HttpHealthCheck
 import com.structurizr.model.StaticStructureElementInstance
@@ -8,7 +7,6 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
-@StructurizrDslMarker
 @OptIn(ExperimentalContracts::class)
 abstract class StaticStructureElementInstanceScope<TElement : StaticStructureElementInstance>
 internal constructor(
