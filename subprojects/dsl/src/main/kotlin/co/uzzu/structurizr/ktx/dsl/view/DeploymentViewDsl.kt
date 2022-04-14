@@ -76,6 +76,14 @@ internal constructor(
             callsInPlace(block, InvocationKind.EXACTLY_ONCE)
         }
 
+        val source = relationship.source as? DeploymentNode
+        val destination = relationship.destination as? DeploymentNode
+        if (source == null || destination == null) {
+            throw IllegalArgumentException("A deployment node must be specified. source: $source, destination: $destination")
+        }
+        view.add(source, false)
+        view.add(destination, false)
+
         return view.add(relationship).apply(block)
     }
 }

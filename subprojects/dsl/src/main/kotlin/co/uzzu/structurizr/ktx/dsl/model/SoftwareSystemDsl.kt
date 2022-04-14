@@ -55,100 +55,248 @@ internal constructor(
     /**
      * @see [Person.interactsWith]
      */
-    fun Person.interactsWith(
-        destination: Person,
+    @JvmName("relWithPerson")
+    fun rel(
+        pair: Pair<Person, Person>,
         description: String? = null,
         technology: String? = null,
         interactionStyle: InteractionStyle = InteractionStyle.Synchronous,
         block: RelationshipScope.() -> Unit = Any::doNothing
-    ): Relationship? =
-        interactsWith(destination, description, technology, interactionStyle)
-            ?.apply { block(RelationshipScope(this)) }
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return relationship(pair, description, technology, interactionStyle, block)
+    }
+
+    /**
+     * @see [Person.interactsWith]
+     */
+    @JvmName("relationshipWithPerson")
+    fun relationship(
+        pair: Pair<Person, Person>,
+        description: String? = null,
+        technology: String? = null,
+        interactionStyle: InteractionStyle = InteractionStyle.Synchronous,
+        block: RelationshipScope.() -> Unit = Any::doNothing
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return pair.let { (source, destination) ->
+            source.interactsWith(destination, description, technology, interactionStyle)
+                ?.apply { block(RelationshipScope(this)) }
+        }
+    }
 
     /**
      * @see [StaticStructureElement.uses]
      * @param block [RelationshipScope]
      */
-    fun StaticStructureElement.uses(
-        destination: SoftwareSystem,
+    @JvmName("relToSoftwareSystem")
+    fun rel(
+        pair: Pair<StaticStructureElement, SoftwareSystem>,
         description: String? = null,
         technology: String? = null,
         interactionStyle: InteractionStyle? = null,
         block: RelationshipScope.() -> Unit = Any::doNothing
-    ): Relationship? =
-        uses(destination, description, technology, interactionStyle)
-            ?.apply { block(RelationshipScope(this)) }
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return relationship(pair, description, technology, interactionStyle, block)
+    }
 
     /**
      * @see [StaticStructureElement.uses]
      * @param block [RelationshipScope]
      */
-    fun StaticStructureElement.uses(
-        destination: Container,
+    @JvmName("relationshipToSoftwareSystem")
+    fun relationship(
+        pair: Pair<StaticStructureElement, SoftwareSystem>,
         description: String? = null,
         technology: String? = null,
         interactionStyle: InteractionStyle? = null,
         block: RelationshipScope.() -> Unit = Any::doNothing
-    ): Relationship? =
-        uses(destination, description, technology, interactionStyle)
-            ?.apply { block(RelationshipScope(this)) }
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return pair.let { (source, destination) ->
+            source.uses(destination, description, technology, interactionStyle)
+                ?.apply { block(RelationshipScope(this)) }
+        }
+    }
 
     /**
      * @see [StaticStructureElement.uses]
      * @param block [RelationshipScope]
      */
-    fun StaticStructureElement.uses(
-        destination: Component,
+    @JvmName("relToContainer")
+    fun rel(
+        pair: Pair<StaticStructureElement, Container>,
         description: String? = null,
         technology: String? = null,
         interactionStyle: InteractionStyle? = null,
         block: RelationshipScope.() -> Unit = Any::doNothing
-    ): Relationship? =
-        uses(destination, description, technology, interactionStyle)
-            ?.apply { block(RelationshipScope(this)) }
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return relationship(pair, description, technology, interactionStyle, block)
+    }
+
+    /**
+     * @see [StaticStructureElement.uses]
+     * @param block [RelationshipScope]
+     */
+    @JvmName("relationshipToContainer")
+    fun relationship(
+        pair: Pair<StaticStructureElement, Container>,
+        description: String? = null,
+        technology: String? = null,
+        interactionStyle: InteractionStyle? = null,
+        block: RelationshipScope.() -> Unit = Any::doNothing
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return pair.let { (source, destination) ->
+            source.uses(destination, description, technology, interactionStyle)
+                ?.apply { block(RelationshipScope(this)) }
+        }
+    }
+
+    /**
+     * @see [StaticStructureElement.uses]
+     * @param block [RelationshipScope]
+     */
+    @JvmName("relToComponent")
+    fun rel(
+        pair: Pair<StaticStructureElement, Component>,
+        description: String? = null,
+        technology: String? = null,
+        interactionStyle: InteractionStyle? = null,
+        block: RelationshipScope.() -> Unit = Any::doNothing
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return relationship(pair, description, technology, interactionStyle, block)
+    }
+
+    /**
+     * @see [StaticStructureElement.uses]
+     * @param block [RelationshipScope]
+     */
+    @JvmName("relationshipToComponent")
+    fun relationship(
+        pair: Pair<StaticStructureElement, Component>,
+        description: String? = null,
+        technology: String? = null,
+        interactionStyle: InteractionStyle? = null,
+        block: RelationshipScope.() -> Unit = Any::doNothing
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return pair.let { (source, destination) ->
+            source.uses(destination, description, technology, interactionStyle)
+                ?.apply { block(RelationshipScope(this)) }
+        }
+    }
 
     /**
      * @see [StaticStructureElement.delivers]
      * @param block [RelationshipScope]
      */
-    fun StaticStructureElement.delivers(
-        destination: Person,
+    @JvmName("relToPerson")
+    fun rel(
+        pair: Pair<StaticStructureElement, Person>,
         description: String? = null,
         technology: String? = null,
         interactionStyle: InteractionStyle? = null,
         block: RelationshipScope.() -> Unit = Any::doNothing
-    ): Relationship? =
-        delivers(destination, description, technology, interactionStyle)
-            ?.apply { block(RelationshipScope(this)) }
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return relationship(pair, description, technology, interactionStyle, block)
+    }
 
     /**
-     * @see [StaticStructureElement.uses]
+     * @see [StaticStructureElement.delivers]
      * @param block [RelationshipScope]
      */
-    fun StaticStructureElement.uses(
-        destination: StaticStructureElement,
+    @JvmName("relationshipToPerson")
+    fun relationship(
+        pair: Pair<StaticStructureElement, Person>,
         description: String? = null,
         technology: String? = null,
         interactionStyle: InteractionStyle? = null,
-        tags: Array<String?>? = null,
         block: RelationshipScope.() -> Unit = Any::doNothing
-    ): Relationship? =
-        uses(destination, description, technology, interactionStyle, tags)
-            ?.apply { block(RelationshipScope(this)) }
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return pair.let { (source, destination) ->
+            source.delivers(destination, description, technology, interactionStyle)
+                ?.apply { block(RelationshipScope(this)) }
+        }
+    }
 
     /**
      * @see [InfrastructureNode.uses]
+     * @param block [RelationshipScope]
      */
-    fun InfrastructureNode.uses(
-        destination: DeploymentElement,
+    @JvmName("relWithInfrastructureNode")
+    fun rel(
+        pair: Pair<InfrastructureNode, DeploymentElement>,
         description: String? = null,
         technology: String? = null,
         interactionStyle: InteractionStyle = InteractionStyle.Synchronous,
         tags: Array<String> = emptyArray(),
         block: RelationshipScope.() -> Unit = Any::doNothing
-    ): Relationship? =
-        uses(destination, description, technology, interactionStyle, tags)
-            ?.apply { block(RelationshipScope(this)) }
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return relationship(pair, description, technology, interactionStyle, tags, block)
+    }
+
+    /**
+     * @see [InfrastructureNode.uses]
+     * @param block [RelationshipScope]
+     */
+    @JvmName("relationshipWithInfrastructureNode")
+    fun relationship(
+        pair: Pair<InfrastructureNode, DeploymentElement>,
+        description: String? = null,
+        technology: String? = null,
+        interactionStyle: InteractionStyle = InteractionStyle.Synchronous,
+        tags: Array<String> = emptyArray(),
+        block: RelationshipScope.() -> Unit = Any::doNothing
+    ): Relationship? {
+        contract {
+            callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return pair.let { (source, destination) ->
+            source.uses(destination, description, technology, interactionStyle, tags)
+                ?.apply { block(RelationshipScope(this)) }
+        }
+    }
 
     // endregion
 }

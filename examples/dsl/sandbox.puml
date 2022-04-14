@@ -1,147 +1,69 @@
 @startuml(id=Container)
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Component>
 title Customer Information System - Containers
 
-skinparam {
-  shadowing false
-  arrowFontSize 10
-  defaultTextAlignment center
-  wrapWidth 200
-  maxMessageSize 100
+top to bottom direction
+System_Boundary(2, "Customer Information System") {
+  Container(11, "Message Bus", "RabbitMQ", "Transport for business events.")
+  Container(3, "Customer Application", "Java and Spring Boot", "Allows customers to manage their profile.")
+  Container(4, "Customer Service", "Java and Spring Boot", "The point of access for customer information.")
+  ContainerDb(6, "Customer Database", "Oracle 12c", "Stores customer information.")
+  Container(7, "Reporting Service", "Ruby", "Creates normalised data for reporting purposes.")
+  ContainerDb(8, "reporting database", "MySQL", "Stores a normalised version of all business data for ad hoc reporting purposes.")
+  Container(9, "Audit Service", "C# .NET", "Provides organisation-wide auditing facilities.")
+  Container(10, "Audit Store", "Event Store", "Stores information about events that have happened.")
 }
-hide stereotype
-skinparam rectangle<<3>> {
-  BackgroundColor #facc2e
-  FontColor #000000
-  BorderColor #AF8E20
+Rel(11, 9, "Sends customer update events to")
+Rel(11, 7, "Sends customer update events to")
+Rel(4, 3, "Sends events to", "WebSocket")
+Rel(4, 6, "Stores data in", "JDBC")
+Rel(4, 11, "Sends customer update events to")
+Rel(3, 4, "Updates customer information using", "JSON/HTTPS")
+Rel(9, 10, "Stores events in")
+Rel(7, 8, "Stores data in")
+@enduml
+@startuml(id=Customers_Request)
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+title Customer Information System - Customer Service - Components
+
+top to bottom direction
+ContainerDb(6, "Customer Database", "Oracle 12c", "Stores customer information.")
+Container_Boundary(4, "Customer Service") {
+  Component(5, "CustomerHandler", "ApiController", "The handler for /cutomers request")
 }
-skinparam rectangle<<4>> {
-  BackgroundColor #facc2e
-  FontColor #000000
-  BorderColor #AF8E20
-}
-skinparam database<<5>> {
-  BackgroundColor #f5da81
-  FontColor #000000
-  BorderColor #AB985A
-}
-skinparam rectangle<<6>> {
-  BackgroundColor #facc2e
-  FontColor #000000
-  BorderColor #AF8E20
-}
-skinparam database<<7>> {
-  BackgroundColor #f5da81
-  FontColor #000000
-  BorderColor #AB985A
-}
-skinparam rectangle<<8>> {
-  BackgroundColor #facc2e
-  FontColor #000000
-  BorderColor #AF8E20
-}
-skinparam database<<9>> {
-  BackgroundColor #f5da81
-  FontColor #000000
-  BorderColor #AB985A
-}
-skinparam rectangle<<10>> {
-  BackgroundColor #facc2e
-  FontColor #000000
-  BorderColor #AF8E20
-}
-package "Customer Information System\n[Software System]" {
-  rectangle "==Audit Service\n<size:10>[Container: C# .NET]</size>\n\nProvides organisation-wide auditing facilities." <<8>> as 8
-  database "==Audit Store\n<size:10>[Container: Event Store]</size>\n\nStores information about events that have happened." <<9>> as 9
-  rectangle "==Customer Application\n<size:10>[Container: Java and Spring Boot]</size>\n\nAllows customers to manage their profile." <<3>> as 3
-  database "==Customer Database\n<size:10>[Container: Oracle 12c]</size>\n\nStores customer information." <<5>> as 5
-  rectangle "==Customer Service\n<size:10>[Container: Java and Spring Boot]</size>\n\nThe point of access for customer information." <<4>> as 4
-  rectangle "==Message Bus\n<size:10>[Container: RabbitMQ]</size>\n\nTransport for business events." <<10>> as 10
-  rectangle "==Reporting Service\n<size:10>[Container: Ruby]</size>\n\nCreates normalised data for reporting purposes." <<6>> as 6
-  database "==reporting database\n<size:10>[Container: MySQL]</size>\n\nStores a normalised version of all business data for ad hoc reporting purposes." <<7>> as 7
-}
-8 -[#707070]-> 9 : "Stores events in"
-3 -[#707070]-> 4 : "Updates customer information using\n<size:8>[JSON/HTTPS]</size>"
-4 .[#707070].> 3 : "Sends events to\n<size:8>[WebSocket]</size>"
-4 -[#707070]-> 5 : "Stores data in\n<size:8>[JDBC]</size>"
-4 .[#707070].> 10 : "Sends customer update events to"
-10 .[#707070].> 8 : "Sends customer update events to"
-10 .[#707070].> 6 : "Sends customer update events to"
-6 -[#707070]-> 7 : "Stores data in"
-@enduml@startuml(id=CustomerUpdateEvent)
+Rel(5, 6, "Stores data in", "JDBC")
+@enduml
+@startuml(id=CustomerUpdateEvent)
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Component>
 title Customer Information System - Dynamic
 caption This diagram shows what happens when a customer updates their details.
 
-skinparam {
-  shadowing false
-  arrowFontSize 10
-  defaultTextAlignment center
-  wrapWidth 200
-  maxMessageSize 100
-}
 hide stereotype
-skinparam rectangle<<1>> {
-  BackgroundColor #ffbf00
-  FontColor #000000
-  BorderColor #B28500
-}
-skinparam rectangle<<3>> {
-  BackgroundColor #facc2e
-  FontColor #000000
-  BorderColor #AF8E20
-}
-skinparam rectangle<<4>> {
-  BackgroundColor #facc2e
-  FontColor #000000
-  BorderColor #AF8E20
-}
-skinparam database<<5>> {
-  BackgroundColor #f5da81
-  FontColor #000000
-  BorderColor #AB985A
-}
-skinparam rectangle<<6>> {
-  BackgroundColor #facc2e
-  FontColor #000000
-  BorderColor #AF8E20
-}
-skinparam database<<7>> {
-  BackgroundColor #f5da81
-  FontColor #000000
-  BorderColor #AB985A
-}
-skinparam rectangle<<8>> {
-  BackgroundColor #facc2e
-  FontColor #000000
-  BorderColor #AF8E20
-}
-skinparam database<<9>> {
-  BackgroundColor #f5da81
-  FontColor #000000
-  BorderColor #AB985A
-}
-skinparam rectangle<<10>> {
-  BackgroundColor #facc2e
-  FontColor #000000
-  BorderColor #AF8E20
-}
-left to right direction
-
-rectangle "==Customer\n<size:10>[Person]</size>\n\nA customer" <<1>> as 1
-rectangle "==Customer Application\n<size:10>[Container: Java and Spring Boot]</size>\n\nAllows customers to manage their profile." <<3>> as 3
-rectangle "==Customer Service\n<size:10>[Container: Java and Spring Boot]</size>\n\nThe point of access for customer information." <<4>> as 4
-database "==Customer Database\n<size:10>[Container: Oracle 12c]</size>\n\nStores customer information." <<5>> as 5
-rectangle "==Message Bus\n<size:10>[Container: RabbitMQ]</size>\n\nTransport for business events." <<10>> as 10
-rectangle "==Audit Service\n<size:10>[Container: C# .NET]</size>\n\nProvides organisation-wide auditing facilities." <<8>> as 8
-rectangle "==Reporting Service\n<size:10>[Container: Ruby]</size>\n\nCreates normalised data for reporting purposes." <<6>> as 6
-database "==Audit Store\n<size:10>[Container: Event Store]</size>\n\nStores information about events that have happened." <<9>> as 9
-database "==reporting database\n<size:10>[Container: MySQL]</size>\n\nStores a normalised version of all business data for ad hoc reporting purposes." <<7>> as 7
-1 .[#707070].> 3 : "1. Uses"
-3 -[#707070]-> 4 : "2. Updates customer information using\n<size:8>[JSON/HTTPS]</size>"
-4 -[#707070]-> 5 : "3. Stores data in\n<size:8>[JDBC]</size>"
-4 .[#707070].> 10 : "4. Sends customer update events to"
-4 .[#707070].> 3 : "5. Confirms update to\n<size:8>[WebSocket]</size>"
-10 .[#707070].> 8 : "5. Sends customer update events to"
-10 .[#707070].> 6 : "5. Sends customer update events to"
-8 -[#707070]-> 9 : "6. Stores events in"
-6 -[#707070]-> 7 : "6. Stores data in"
+actor "Customer" as 1 <<Person>>
+participant "Customer Application" as 3 <<Container: Java and Spring Boot>>
+participant "Customer Service" as 4 <<Container: Java and Spring Boot>>
+participant "Customer Database" as 6 <<Container: Oracle 12c>>
+participant "Message Bus" as 11 <<Container: RabbitMQ>>
+participant "Audit Service" as 9 <<Container: C# .NET>>
+participant "Reporting Service" as 7 <<Container: Ruby>>
+participant "Audit Store" as 10 <<Container: Event Store>>
+participant "reporting database" as 8 <<Container: MySQL>>
+1 -> 3 : 1. 
+3 -> 4 : 2. 
+4 -> 6 : 3. 
+4 -> 11 : 4. 
+4 -> 3 : 5. Confirms update to
+11 -> 9 : 5. 
+11 -> 7 : 5. 
+9 -> 10 : 6. 
+7 -> 8 : 6. 
 @enduml

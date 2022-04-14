@@ -29,35 +29,35 @@ internal constructor(
 ) : InclusionScope<DynamicView>(view) {
 
     /**
-     * @see [DeploymentView.add]
+     * @see [DynamicView.add]
      */
-    fun relationship(
-        source: Element,
-        destination: Element,
+    fun rel(
+        pair: Pair<Element, Element>,
         description: String = "",
-        block: RelationshipView.() -> Unit = Any::doNothing
+        block: RelationshipViewScope.() -> Unit = Any::doNothing
     ): RelationshipView {
         contract {
             callsInPlace(block, InvocationKind.EXACTLY_ONCE)
         }
 
-        return view.add(source, description, destination).apply(block)
+        return relationship(pair, description, block)
     }
 
     /**
-     * @see [DeploymentView.add]
+     * @see [DynamicView.add]
      */
     fun relationship(
-        source: Element,
-        description: String,
-        destination: Element,
-        block: RelationshipView.() -> Unit = Any::doNothing
+        pair: Pair<Element, Element>,
+        description: String = "",
+        block: RelationshipViewScope.() -> Unit = Any::doNothing
     ): RelationshipView {
         contract {
             callsInPlace(block, InvocationKind.EXACTLY_ONCE)
         }
-
-        return view.add(source, description, destination).apply(block)
+        return pair.let { (source, destination) ->
+            view.add(source, description, destination)
+                .apply { block(RelationshipViewScope(this)) }
+        }
     }
 
     /**
@@ -95,33 +95,31 @@ internal constructor(
     /**
      * @see [DynamicView.add]
      */
-    fun relationship(
-        source: Element,
-        destination: Element,
+    fun rel(
+        pair: Pair<Element, Element>,
         description: String = "",
-        block: RelationshipView.() -> Unit = Any::doNothing
+        block: RelationshipViewScope.() -> Unit = Any::doNothing
     ): RelationshipView {
         contract {
             callsInPlace(block, InvocationKind.EXACTLY_ONCE)
         }
 
-        return scope.relationship(source, description, destination, block)
+        return relationship(pair, description, block)
     }
 
     /**
      * @see [DynamicView.add]
      */
     fun relationship(
-        source: Element,
-        description: String,
-        destination: Element,
-        block: RelationshipView.() -> Unit = Any::doNothing
+        pair: Pair<Element, Element>,
+        description: String = "",
+        block: RelationshipViewScope.() -> Unit = Any::doNothing
     ): RelationshipView {
         contract {
             callsInPlace(block, InvocationKind.EXACTLY_ONCE)
         }
 
-        return scope.relationship(source, description, destination, block)
+        return scope.relationship(pair, description, block)
     }
 
     /**

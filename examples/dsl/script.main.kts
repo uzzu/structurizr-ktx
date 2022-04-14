@@ -1,13 +1,14 @@
-@file:DependsOn("com.structurizr:structurizr-core:1.5.0")
-@file:DependsOn("com.structurizr:structurizr-plantuml:1.5.0")
-@file:DependsOn("co.uzzu.structurizr.ktx:dsl:0.0.5")
+@file:Repository("file:///Users/hirokazu-uzu/.m2/repository")
+@file:DependsOn("com.structurizr:structurizr-core:1.6.1")
+@file:DependsOn("co.uzzu.structurizr.ktx:dsl:0.0.24")
+@file:DependsOn("co.uzzu.structurizr.ktx:plantuml-multisystem:0.0.24")
 
 import co.uzzu.structurizr.ktx.dsl.*
 import co.uzzu.structurizr.ktx.dsl.model.*
-import co.uzzu.structurizr.ktx.dsl.view.*
-import com.structurizr.io.plantuml.StructurizrPlantUMLWriter
+import co.uzzu.structurizr.ktx.plantuml.*
 import com.structurizr.model.*
 import com.structurizr.view.*
+import com.structurizr.view.AutomaticLayout.*
 import java.io.File
 import java.io.FileWriter
 
@@ -21,9 +22,10 @@ val workspace = Workspace(
 ) {
 
     lateinit var customer: Person
-    lateinit var softwareSystem: SoftwareSystem
+    lateinit var customerInformationSystem: SoftwareSystem
     lateinit var customerApplication: Container
     lateinit var customerService: Container
+    lateinit var customerHandler: Component
     lateinit var customerDatabase: Container
     lateinit var reportingService: Container
     lateinit var reportingDatabase: Container
@@ -33,7 +35,7 @@ val workspace = Workspace(
 
     model {
         customer = Person("Customer", "A customer")
-        softwareSystem = SoftwareSystem("Customer Information System") {
+        customerInformationSystem = SoftwareSystem("Customer Information System") {
             description = "Stores information"
 
             customerApplication = Container("Customer Application") {
@@ -44,11 +46,17 @@ val workspace = Workspace(
                 description = "The point of access for customer information."
                 technology = "Java and Spring Boot"
                 tags(MICROSERVICE_TAG)
+
+                customerHandler = Component("CustomerHandler") {
+                    description = "The handler for /cutomers request"
+                    technology = "ApiController"
+                }
             }
             customerDatabase = Container("Customer Database") {
                 description = "Stores customer information."
                 technology = "Oracle 12c"
                 tags(DATASTORE_TAG)
+                c4.type = C4ElementType.Db
             }
 
             reportingService = Container("Reporting Service") {
@@ -60,6 +68,7 @@ val workspace = Workspace(
                 description = "Stores a normalised version of all business data for ad hoc reporting purposes."
                 technology = "MySQL"
                 tags(DATASTORE_TAG)
+                c4.type = C4ElementType.Db
             }
 
             auditService = Container("Audit Service") {
@@ -79,39 +88,39 @@ val workspace = Workspace(
                 tags(MESSAGE_BUS_TAG)
             }
 
-            customer.uses(customerApplication, "Uses")
-            customerApplication.uses(customerService) {
+            rel(customer to customerApplication, "Uses")
+            rel(customerApplication to customerService) {
                 description = "Updates customer information using"
                 technology = "JSON/HTTPS"
                 interactionStyle = InteractionStyle.Synchronous
             }
-            customerService.uses(messageBus) {
+            rel(customerService to messageBus) {
                 description = "Sends customer update events to"
                 interactionStyle = InteractionStyle.Asynchronous
             }
-            customerService.uses(customerDatabase) {
+            rel(customerService to customerDatabase) {
                 description = "Stores data in"
                 technology = "JDBC"
                 interactionStyle = InteractionStyle.Synchronous
             }
-            customerService.uses(customerApplication) {
+            rel(customerService to customerApplication) {
                 description = "Sends events to"
                 technology = "WebSocket"
                 interactionStyle = InteractionStyle.Asynchronous
             }
-            messageBus.uses(reportingService) {
+            rel(messageBus to reportingService) {
                 description = "Sends customer update events to"
                 interactionStyle = InteractionStyle.Asynchronous
             }
-            messageBus.uses(auditService) {
+            rel(messageBus to auditService) {
                 description = "Sends customer update events to"
                 interactionStyle = InteractionStyle.Asynchronous
             }
-            reportingService.uses(reportingDatabase) {
+            rel(reportingService to reportingDatabase) {
                 description = "Stores data in"
                 interactionStyle = InteractionStyle.Synchronous
             }
-            auditService.uses(auditStore) {
+            rel(auditService to auditStore) {
                 description = "Stores events in"
                 interactionStyle = InteractionStyle.Synchronous
             }
@@ -119,30 +128,45 @@ val workspace = Workspace(
     }
 
     views {
-        ContainerView(softwareSystem, "Container") {
+        ContainerView(customerInformationSystem, "Container") {
             includes {
                 allContainers()
             }
+
+            automaticLayout {
+                enable(Graphviz(RankDirection.LeftRight))
+            }
         }
-        DynamicView(softwareSystem, "CustomerUpdateEvent") {
+        ComponentView(customerService, "Customers Request") {
+            includes {
+                rel(customerHandler to customerDatabase) {
+                    description = "Stores data in"
+                    element {
+                        technology = "JDBC"
+                        interactionStyle = InteractionStyle.Synchronous
+                    }
+                }
+            }
+        }
+        DynamicView(customerInformationSystem, "CustomerUpdateEvent") {
             description = "This diagram shows what happens when a customer updates their details."
 
             includes {
-                relationship(customer, customerApplication)
-                relationship(customerApplication, customerService)
-                relationship(customerService, customerDatabase)
-                relationship(customerService, messageBus)
+                rel(customer to customerApplication)
+                rel(customerApplication to customerService)
+                rel(customerService to customerDatabase)
+                rel(customerService to messageBus)
 
                 parallelSequence {
-                    relationship(messageBus, reportingService)
-                    relationship(reportingService, reportingDatabase)
+                    rel(messageBus to reportingService)
+                    rel(reportingService to reportingDatabase)
                 }
                 parallelSequence {
-                    relationship(messageBus, auditService)
-                    relationship(auditService, auditStore)
+                    rel(messageBus to auditService)
+                    rel(auditService to auditStore)
                 }
                 parallelSequence {
-                    relationship(customerService, "Confirms update to", customerApplication)
+                    rel(customerService to customerApplication, "Confirms update to")
                 }
             }
         }
@@ -152,7 +176,7 @@ val workspace = Workspace(
                 color = "#000000"
             }
             element(Tags.PERSON) {
-                background = "#ffbf00"
+                background = "#000000"
                 shape = Shape.Person
             }
             element(Tags.CONTAINER) {
@@ -185,6 +209,9 @@ val workspace = Workspace(
 
 val file = File("sandbox.puml")
 FileWriter(file).use { out ->
-    val writer = StructurizrPlantUMLWriter()
+    val writer = PlantUmlWriter(C4PlantUml) {
+        useSequenceDiagram("CustomerUpdateEvent") { useDefaultColor = true }
+        layoutWithLegend = false
+    }
     writer.write(workspace, out)
 }

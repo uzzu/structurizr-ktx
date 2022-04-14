@@ -24,6 +24,14 @@ internal constructor(
     /**
      * @see [Styles.addRelationshipStyle]
      */
+    fun rel(
+        tag: String,
+        block: RelationshipStyle.() -> Unit
+    ): RelationshipStyle = relationship(tag, block)
+
+    /**
+     * @see [Styles.addRelationshipStyle]
+     */
     fun relationship(
         tag: String,
         block: RelationshipStyle.() -> Unit

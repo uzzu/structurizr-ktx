@@ -3,6 +3,9 @@ package co.uzzu.structurizr.ktx.dsl.view
 import co.uzzu.structurizr.ktx.dsl.StructurizrDslMarker
 import com.structurizr.model.Component
 import com.structurizr.model.Container
+import com.structurizr.model.Element
+import com.structurizr.model.Person
+import com.structurizr.model.SoftwareSystem
 import com.structurizr.view.ComponentView
 
 @StructurizrDslMarker
@@ -69,6 +72,16 @@ internal constructor(
         addRelationship: Boolean = true
     ) {
         view.add(component, addRelationship)
+    }
+
+    override fun add(element: Element, addRelationships: Boolean) = when (element) {
+        is Person -> person(element, addRelationships)
+        is SoftwareSystem -> softwareSystem(element, addRelationships)
+        is Container -> container(element, addRelationships)
+        is Component -> component(element, addRelationships)
+        else -> throw IllegalArgumentException(
+            "A person or software system or container or component must be specified. element: $element"
+        )
     }
 }
 

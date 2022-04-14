@@ -46,7 +46,7 @@ val dokkaJar by tasks.creating(Jar::class) {
 }
 
 group = publishingGroupId
-version = publishingArtifactVersion(env.PUBLISH_PRODUCTION.isPresent)
+version = publishingArtifactVersion(true)
 setProperty("archivesBaseName", publishingArtifactIdBase)
 
 publishing {
@@ -67,7 +67,7 @@ publishing {
             from(components.getByName("java"))
             groupId = publishingGroupId
             artifactId = publishingArtifactIdBase
-            version = publishingArtifactVersion(env.PUBLISH_PRODUCTION.isPresent)
+            version = publishingArtifactVersion(true)
 
             artifact(sourcesJar)
             artifact(dokkaJar)

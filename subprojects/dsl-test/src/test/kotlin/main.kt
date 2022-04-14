@@ -79,39 +79,39 @@ fun main() {
                     tags(MESSAGE_BUS_TAG)
                 }
 
-                customer.uses(customerApplication, "Uses")
-                customerApplication.uses(customerService) {
+                rel(customer to customerApplication, "Uses")
+                rel(customerApplication to customerService) {
                     description = "Updates customer information using"
                     technology = "JSON/HTTPS"
                     interactionStyle = InteractionStyle.Synchronous
                 }
-                customerService.uses(messageBus) {
+                rel(customerService to messageBus) {
                     description = "Sends customer update events to"
                     interactionStyle = InteractionStyle.Asynchronous
                 }
-                customerService.uses(customerDatabase) {
+                rel(customerService to customerDatabase) {
                     description = "Stores data in"
                     technology = "JDBC"
                     interactionStyle = InteractionStyle.Synchronous
                 }
-                customerService.uses(customerApplication) {
+                rel(customerService to customerApplication) {
                     description = "Sends events to"
                     technology = "WebSocket"
                     interactionStyle = InteractionStyle.Asynchronous
                 }
-                messageBus.uses(reportingService) {
+                rel(messageBus to reportingService) {
                     description = "Sends customer update events to"
                     interactionStyle = InteractionStyle.Asynchronous
                 }
-                messageBus.uses(auditService) {
+                rel(messageBus to auditService) {
                     description = "Sends customer update events to"
                     interactionStyle = InteractionStyle.Asynchronous
                 }
-                reportingService.uses(reportingDatabase) {
+                rel(reportingService to reportingDatabase) {
                     description = "Stores data in"
                     interactionStyle = InteractionStyle.Synchronous
                 }
-                auditService.uses(auditStore) {
+                rel(auditService to auditStore) {
                     description = "Stores events in"
                     interactionStyle = InteractionStyle.Synchronous
                 }
@@ -128,21 +128,21 @@ fun main() {
                 description = "This diagram shows what happens when a customer updates their details."
 
                 includes {
-                    relationship(customer, customerApplication)
-                    relationship(customerApplication, customerService)
-                    relationship(customerService, customerDatabase)
-                    relationship(customerService, messageBus)
+                    rel(customer to customerApplication)
+                    rel(customerApplication to customerService)
+                    rel(customerService to customerDatabase)
+                    rel(customerService to messageBus)
 
                     parallelSequence {
-                        relationship(messageBus, reportingService)
-                        relationship(reportingService, reportingDatabase)
+                        rel(messageBus to reportingService)
+                        rel(reportingService to reportingDatabase)
                     }
                     parallelSequence {
-                        relationship(messageBus, auditService)
-                        relationship(auditService, auditStore)
+                        rel(messageBus to auditService)
+                        rel(auditService to auditStore)
                     }
                     parallelSequence {
-                        relationship(customerService, customerApplication, "Confirms update to")
+                        rel(customerService to customerApplication, "Confirms update to")
                     }
                 }
             }
@@ -170,13 +170,13 @@ fun main() {
                     shape = Shape.Cylinder
                 }
 
-                relationship(Tags.RELATIONSHIP) {
+                rel(Tags.RELATIONSHIP) {
                     routing = Routing.Orthogonal
                 }
-                relationship(Tags.ASYNCHRONOUS) {
+                rel(Tags.ASYNCHRONOUS) {
                     dashed = true
                 }
-                relationship(Tags.SYNCHRONOUS) {
+                rel(Tags.SYNCHRONOUS) {
                     dashed = false
                 }
             }
